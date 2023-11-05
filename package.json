@@ -11,5 +11,8 @@
   "license": "",
   "dependencies": {
     "@tensorflow/tfjs": "^4.12.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2"
   }
 }

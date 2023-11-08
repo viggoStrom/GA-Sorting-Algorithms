@@ -1,12 +1,91 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var tf = require("@tensorflow/tfjs");
-var fs = require("fs");
-var listLength = 1000;
-var list = tf.randomNormal([listLength]);
-var max = tf.argMax(list).dataSync()[0];
-var min = tf.argMin(list).dataSync()[0];
-fs.writeFileSync("src/dataVis/dataVisOut.csv", list.arraySync().toString());
+var algorithm_1 = require("./algorithm");
+var Tester = /** @class */ (function () {
+    function Tester(list, algorithm) {
+        this.startTime = 0;
+        this.stopTime = 0;
+        this.time = 0;
+        this.list = list;
+        this.initialLength = list.length;
+        this.inventory = this.takeInventory(list);
+        this.algorithm = algorithm;
+    }
+    Tester.prototype.takeInventory = function (list) {
+        var inventory = {};
+        for (var index = 0; index < this.initialLength; index++) {
+            var selector = list[index].toString();
+            if (inventory[selector] === undefined) {
+                inventory[selector] = 1;
+            }
+            else {
+                inventory[selector]++;
+            }
+        }
+        return inventory;
+    };
+    Tester.prototype.startTimer = function () {
+        this.startTime = parseInt(process.hrtime.bigint().toString().replace("n", ""));
+    };
+    Tester.prototype.stopTimer = function () {
+        this.stopTime = parseInt(process.hrtime.bigint().toString().replace("n", ""));
+    };
+    Tester.prototype.getMS = function () {
+        return Math.floor((this.stopTime - this.startTime) * Math.pow(10, -6));
+    };
+    Tester.prototype.getNS = function () {
+        return this.stopTime - this.startTime;
+    };
+    Tester.prototype.isSorted = function (sortedList) {
+        var length = sortedList.length;
+        for (var index = 0; index < length; index++) {
+            if (sortedList[index] > sortedList[index + 1]) {
+                return false;
+            }
+        }
+        return true;
+    };
+    Tester.prototype.isDestructive = function (sortedList) {
+        if (this.initialLength !== sortedList.length) {
+            return true;
+        }
+        this.takeInventory(sortedList);
+        return false;
+    };
+    Tester.prototype.start = function () {
+        this.startTimer();
+        var sortedList = this.algorithm.call(undefined, this.list);
+        this.stopTimer();
+        var result = ("\n            Time: ".concat(this.getNS(), " ns (").concat(this.getMS(), " ms)\n            Is sorted: ").concat(this.isSorted(sortedList) ? "yes" : "no", "\n            Is destructive: ").concat(this.isDestructive(sortedList) ? "yes" : "no", "\n            "));
+        console.log(result);
+    };
+    return Tester;
+}());
+var stats = [];
+for (var index = 0; index < 1000; index++) {
+    var listLength = 10000;
+    var list = tf.abs(tf.randomStandardNormal([listLength])).arraySync();
+    var quicksortTester = new Tester(list, algorithm_1.quicksort);
+    quicksortTester.start();
+    stats.push(quicksortTester.getNS());
+}
+var averageNS = tf.sum(stats).dataSync()[0] / stats.length;
+console.log("\n    ".concat(averageNS, " ns on average or,\n    ").concat(averageNS * Math.pow(10, -6), " ms on average\n    "));
+// Browser Stuff
+// const max: number = tf.argMax(list).dataSync()[0]
+// const min: number = tf.argMin(list).dataSync()[0]
+// // const steps: number = 20
+// // const percentList = (list.arraySync() as number[]).map((element) => 5000 * element / max).sort()
+// // const normalDistList: number[] = []
+// // for (let index = 0; index < percentList.length; index += listLength / steps) {
+// //     for (let localIndex = 0; localIndex < listLength / steps; localIndex++) {
+// //         normalDistList.push(percentList[index + localIndex])
+// //     }
+// // }
+// // console.log(normalDistList);
+// // fs.writeFileSync("src/dataVis/dataVisOut.csv", normalDistList.toString())
+// BMP stuff
 // const binToBase64 = (fullBin: string): string => {
 //     const chunks = []
 //     for (let index = 0; index < fullBin.length; index += 6) {

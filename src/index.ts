@@ -1,14 +1,111 @@
 
 import * as tf from "@tensorflow/tfjs"
 import * as fs from "fs"
+import { quicksort } from "./algorithm"
 
-const listLength: number = 1000
-const list: tf.Tensor = tf.randomNormal([listLength])
-const max: number = tf.argMax(list).dataSync()[0]
-const min: number = tf.argMin(list).dataSync()[0]
+class Tester {
+    startTime: number
+    stopTime: number
+    time: number
+    list: number[]
+    initialLength: number
+    inventory: any
+    algorithm: Function
+    constructor(list: number[], algorithm: Function) {
+        this.startTime = 0
+        this.stopTime = 0
+        this.time = 0
+        this.list = list
+        this.initialLength = list.length
+        this.inventory = this.takeInventory(list)
+        this.algorithm = algorithm
+    }
+
+    takeInventory(list: number[]): any {
+        const inventory: any = {}
+        for (let index = 0; index < this.initialLength; index++) {
+            const selector = list[index].toString()
+            if (inventory[selector] === undefined) {
+                inventory[selector] = 1
+            } else {
+                inventory[selector]++
+            }
+        }
+        return inventory
+    }
+
+    startTimer(): void {
+        this.startTime = parseInt(process.hrtime.bigint().toString().replace("n", ""))
+    }
+
+    stopTimer(): void {
+        this.stopTime = parseInt(process.hrtime.bigint().toString().replace("n", ""))
+    }
+
+    getMS(): number {
+        return Math.floor((this.stopTime - this.startTime) * 10 ** -6)
+    }
+
+    getNS(): number {
+        return this.stopTime - this.startTime
+    }
+
+    isSorted(sortedList: number[]): boolean {
+        const length = sortedList.length
+        for (let index = 0; index < length; index++) {
+            if (sortedList[index] > sortedList[index + 1]) {
+                return false
+            }
+        }
+        return true
+    }
+
+    isDestructive(sortedList: number[]): boolean {
+        if (this.initialLength !== sortedList.length) {
+            return true
+        }
+        this.takeInventory(sortedList)
+        return false
+    }
+
+    start(): void {
+        this.startTimer()
+        const sortedList = this.algorithm.call(undefined, this.list)
+        this.stopTimer()
+
+        const result = (
+            `
+            Time: ${this.getNS()} ns (${this.getMS()} ms)
+            Is sorted: ${this.isSorted(sortedList) ? "yes" : "no"}
+            Is destructive: ${this.isDestructive(sortedList) ? "yes" : "no"}
+            `
+        )
+
+        console.log(result);
+    }
+}
+
+const stats = []
+for (let index = 0; index < 1000; index++) {
+    const listLength: number = 10000
+    const list: number[] = tf.abs(tf.randomStandardNormal([listLength])).arraySync() as number[]    
+
+    const quicksortTester = new Tester(list, quicksort)
+
+    quicksortTester.start()
+
+    stats.push(quicksortTester.getNS())
+}
+
+const averageNS = tf.sum(stats).dataSync()[0] / stats.length
+console.log(
+    `
+    ${averageNS} ns on average or,
+    ${averageNS * 10 ** -6} ms on average
+    `
+);
 
 
-fs.writeFileSync("src/dataVis/dataVisOut.csv", list.arraySync().toString())
 
 
 
@@ -32,12 +129,29 @@ fs.writeFileSync("src/dataVis/dataVisOut.csv", list.arraySync().toString())
 
 
 
+// Browser Stuff
+
+// const max: number = tf.argMax(list).dataSync()[0]
+// const min: number = tf.argMin(list).dataSync()[0]
+
+// // const steps: number = 20
+// // const percentList = (list.arraySync() as number[]).map((element) => 5000 * element / max).sort()
+// // const normalDistList: number[] = []
+
+// // for (let index = 0; index < percentList.length; index += listLength / steps) {
+// //     for (let localIndex = 0; localIndex < listLength / steps; localIndex++) {
+// //         normalDistList.push(percentList[index + localIndex])
+// //     }
+// // }
+
+// // console.log(normalDistList);
+
+// // fs.writeFileSync("src/dataVis/dataVisOut.csv", normalDistList.toString())
 
 
 
 
-
-
+// BMP stuff
 
 // const binToBase64 = (fullBin: string): string => {
 //     const chunks = []

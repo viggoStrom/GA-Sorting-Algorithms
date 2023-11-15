@@ -3,6 +3,7 @@ import * as tf from "@tensorflow/tfjs"
 import * as fs from "fs"
 import { quicksort } from "./algorithm"
 
+
 class Tester {
     startTime: number
     stopTime: number
@@ -11,14 +12,17 @@ class Tester {
     initialLength: number
     inventory: any
     algorithm: Function
-    constructor(list: number[], algorithm: Function) {
+    expectedOps: number
+
+    constructor(algorithm: Function, list: number[], expectedOps: number) {
         this.startTime = 0
         this.stopTime = 0
         this.time = 0
         this.list = list
         this.initialLength = list.length
-        this.inventory = this.takeInventory(list)
+        this.inventory = this.takeInventory(this.list)
         this.algorithm = algorithm
+        this.expectedOps = expectedOps
     }
 
     takeInventory(list: number[]): any {
@@ -64,46 +68,108 @@ class Tester {
         if (this.initialLength !== sortedList.length) {
             return true
         }
-        this.takeInventory(sortedList)
-        return false
+
+        let isDestructive = false
+        const sortedInventory = this.takeInventory(sortedList)
+        Object.keys(sortedInventory).forEach(element => {
+            isDestructive = !(!isDestructive && sortedInventory[element] === this.inventory[element])
+        })
+
+        return isDestructive
     }
 
-    start(): void {
+    start(): { time: number, ops: number } {
+
         this.startTimer()
         const sortedList = this.algorithm.call(undefined, this.list)
         this.stopTimer()
 
+        const ops = 2345
+        const time = this.getNS()
+
         const result = (
             `
-            Time: ${this.getNS()} ns (${this.getMS()} ms)
-            Is sorted: ${this.isSorted(sortedList) ? "yes" : "no"}
-            Is destructive: ${this.isDestructive(sortedList) ? "yes" : "no"}
-            `
+Time: ${this.getNS()} ns (${this.getMS()} ms)
+Is sorted: ${this.isSorted(sortedList) ? "yes" : "no"}
+Is destructive: ${this.isDestructive(sortedList) ? "yes" : "no"}
+O(): ${ops} (expected ${this.expectedOps} ops)
+`
         )
-
         console.log(result);
+
+        return { time, ops }
     }
 }
 
-const stats = []
-for (let index = 0; index < 1000; index++) {
-    const listLength: number = 10000
-    const list: number[] = tf.abs(tf.randomStandardNormal([listLength])).arraySync() as number[]    
 
-    const quicksortTester = new Tester(list, quicksort)
+// Meta settings
+const loops = 1
+const listLength = 10000
+const stats: {
+    randomList: {
+        times: number[],
+        ops: number[]
+    },
+    semiSorted: {
+        times: number[],
+        ops: number[]
+    }
+} = { randomList: { times: [], ops: [] }, semiSorted: { times: [], ops: [] } }
 
-    quicksortTester.start()
+const algorithm = quicksort
+const expectedO = Math.round(listLength * Math.log(listLength))
 
-    stats.push(quicksortTester.getNS())
+// The testening
+for (let index = 0; index < loops; index++) {
+    let result
+
+    const sliceIndex = Math.random() * listLength // randomize how big of slices to use for semisorted lists
+    const fullList = tf.abs(tf.randomStandardNormal([listLength])).arraySync() as number[]
+    const sortedEnd = fullList.slice(0, sliceIndex + 1).sort()
+    const remainder = fullList.slice(sliceIndex, -1)
+    const semiSortedList = sortedEnd.concat(remainder)
+
+    const fullQuicksort = new Tester(algorithm, fullList, expectedO)
+    result = fullQuicksort.start()
+    stats.randomList.times.push(result.time)
+    stats.randomList.ops.push(result.ops)
+
+    const semiSortedQuicksort = new Tester(algorithm, semiSortedList, expectedO)
+    result = semiSortedQuicksort.start()
+    stats.semiSorted.times.push(result.time)
+    stats.semiSorted.ops.push(result.ops)
 }
 
-const averageNS = tf.sum(stats).dataSync()[0] / stats.length
-console.log(
+// Results
+const randomListStats = {
+    time: tf.sum(stats.randomList.times).dataSync()[0] / stats.randomList.times.length,
+    ops: tf.sum(stats.randomList.ops).dataSync()[0] / stats.randomList.ops.length
+}
+const semiSortedListStats = {
+    time: tf.sum(stats.semiSorted.times).dataSync()[0] / stats.semiSorted.times.length,
+    ops: tf.sum(stats.semiSorted.ops).dataSync()[0] / stats.semiSorted.ops.length
+}
+const result = (
     `
-    ${averageNS} ns on average or,
-    ${averageNS * 10 ** -6} ms on average
+Fully random list results on average:
+    ${randomListStats.time} ns
+    ${(randomListStats.time * 10 ** -6).toFixed(2)} ms
+    ${randomListStats.ops.toFixed(0)} operations (expected ${expectedO})
+
+Semi sorted list results on average:
+    ${semiSortedListStats.time} ns
+    ${(semiSortedListStats.time * 10 ** -6).toFixed(2)} ms
+    ${semiSortedListStats.ops.toFixed(0)} operations (expected ${expectedO})
     `
-);
+)
+console.log(result);
+
+
+
+
+
+
+
 
 
 

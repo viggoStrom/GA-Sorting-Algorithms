@@ -3,14 +3,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var tf = require("@tensorflow/tfjs");
 var algorithm_1 = require("./algorithm");
 var Tester = /** @class */ (function () {
-    function Tester(list, algorithm) {
+    function Tester(algorithm, list, expectedOps) {
         this.startTime = 0;
         this.stopTime = 0;
         this.time = 0;
         this.list = list;
         this.initialLength = list.length;
-        this.inventory = this.takeInventory(list);
+        this.inventory = this.takeInventory(this.list);
         this.algorithm = algorithm;
+        this.expectedOps = expectedOps;
     }
     Tester.prototype.takeInventory = function (list) {
         var inventory = {};
@@ -47,31 +48,63 @@ var Tester = /** @class */ (function () {
         return true;
     };
     Tester.prototype.isDestructive = function (sortedList) {
+        var _this = this;
         if (this.initialLength !== sortedList.length) {
             return true;
         }
-        this.takeInventory(sortedList);
-        return false;
+        var isDestructive = false;
+        var sortedInventory = this.takeInventory(sortedList);
+        Object.keys(sortedInventory).forEach(function (element) {
+            isDestructive = !(!isDestructive && sortedInventory[element] === _this.inventory[element]);
+        });
+        return isDestructive;
     };
     Tester.prototype.start = function () {
         this.startTimer();
         var sortedList = this.algorithm.call(undefined, this.list);
         this.stopTimer();
-        var result = ("\n            Time: ".concat(this.getNS(), " ns (").concat(this.getMS(), " ms)\n            Is sorted: ").concat(this.isSorted(sortedList) ? "yes" : "no", "\n            Is destructive: ").concat(this.isDestructive(sortedList) ? "yes" : "no", "\n            "));
+        var ops = 2345;
+        var time = this.getNS();
+        var result = ("\nTime: ".concat(this.getNS(), " ns (").concat(this.getMS(), " ms)\nIs sorted: ").concat(this.isSorted(sortedList) ? "yes" : "no", "\nIs destructive: ").concat(this.isDestructive(sortedList) ? "yes" : "no", "\nO(): ").concat(ops, " (expected ").concat(this.expectedOps, " ops)\n"));
         console.log(result);
+        return { time: time, ops: ops };
     };
     return Tester;
 }());
-var stats = [];
-for (var index = 0; index < 1000; index++) {
-    var listLength = 10000;
-    var list = tf.abs(tf.randomStandardNormal([listLength])).arraySync();
-    var quicksortTester = new Tester(list, algorithm_1.quicksort);
-    quicksortTester.start();
-    stats.push(quicksortTester.getNS());
+// Meta settings
+var loops = 1;
+var listLength = 10000;
+var stats = { randomList: { times: [], ops: [] }, semiSorted: { times: [], ops: [] } };
+var algorithm = algorithm_1.quicksort;
+var expectedO = Math.round(listLength * Math.log(listLength));
+// The testening
+for (var index = 0; index < loops; index++) {
+    var result_1 = void 0;
+    var sliceIndex = Math.random() * listLength; // randomize how big of slices to use for semisorted lists
+    var fullList = tf.abs(tf.randomStandardNormal([listLength])).arraySync();
+    var sortedEnd = fullList.slice(0, sliceIndex + 1).sort();
+    var remainder = fullList.slice(sliceIndex, -1);
+    var semiSortedList = sortedEnd.concat(remainder);
+    var fullQuicksort = new Tester(algorithm, fullList, expectedO);
+    result_1 = fullQuicksort.start();
+    stats.randomList.times.push(result_1.time);
+    stats.randomList.ops.push(result_1.ops);
+    var semiSortedQuicksort = new Tester(algorithm, semiSortedList, expectedO);
+    result_1 = semiSortedQuicksort.start();
+    stats.semiSorted.times.push(result_1.time);
+    stats.semiSorted.ops.push(result_1.ops);
 }
-var averageNS = tf.sum(stats).dataSync()[0] / stats.length;
-console.log("\n    ".concat(averageNS, " ns on average or,\n    ").concat(averageNS * Math.pow(10, -6), " ms on average\n    "));
+// Results
+var randomListStats = {
+    time: tf.sum(stats.randomList.times).dataSync()[0] / stats.randomList.times.length,
+    ops: tf.sum(stats.randomList.ops).dataSync()[0] / stats.randomList.ops.length
+};
+var semiSortedListStats = {
+    time: tf.sum(stats.semiSorted.times).dataSync()[0] / stats.semiSorted.times.length,
+    ops: tf.sum(stats.semiSorted.ops).dataSync()[0] / stats.semiSorted.ops.length
+};
+var result = ("\nFully random list results on average:\n    ".concat(randomListStats.time, " ns\n    ").concat((randomListStats.time * Math.pow(10, -6)).toFixed(2), " ms\n    ").concat(randomListStats.ops.toFixed(0), " operations (expected ").concat(expectedO, ")\n\nSemi sorted list results on average:\n    ").concat(semiSortedListStats.time, " ns\n    ").concat((semiSortedListStats.time * Math.pow(10, -6)).toFixed(2), " ms\n    ").concat(semiSortedListStats.ops.toFixed(0), " operations (expected ").concat(expectedO, ")\n    "));
+console.log(result);
 // Browser Stuff
 // const max: number = tf.argMax(list).dataSync()[0]
 // const min: number = tf.argMin(list).dataSync()[0]

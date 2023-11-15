@@ -10,6 +10,18 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.quicksort = void 0;
+var fs = require("node:fs/promises");
+var opsCounter = /** @class */ (function () {
+    function opsCounter() {
+        fs.appendFile("./outputs/opsCount.txt", "");
+        this.count = 0;
+    }
+    opsCounter.prototype.increment = function () {
+        this.count++;
+    };
+    return opsCounter;
+}());
+opsCounter;
 // Stolen from https://www.freecodecamp.org/news/how-to-write-quick-sort-algorithm-with-javascript/ 
 // With heavy modification and help from Axel Thornberg
 var quicksort = function (list) {

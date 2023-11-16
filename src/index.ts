@@ -13,8 +13,10 @@ class Tester {
     inventory: any
     algorithm: Function
     expectedOps: number
+    opsCount: number
+    humanReadable: boolean
 
-    constructor(algorithm: Function, list: number[], expectedOps: number) {
+    constructor(algorithm: Function, list: number[], expectedOps: number, humanReadable: boolean = false) {
         this.startTime = 0
         this.stopTime = 0
         this.time = 0
@@ -23,6 +25,8 @@ class Tester {
         this.inventory = this.takeInventory(this.list)
         this.algorithm = algorithm
         this.expectedOps = expectedOps
+        this.opsCount = 0
+        this.humanReadable = humanReadable
     }
 
     takeInventory(list: number[]): any {
@@ -79,87 +83,106 @@ class Tester {
     }
 
     start(): { time: number, ops: number } {
+        const mem: number[] = []
+        const ops: number[] = [0]
 
         this.startTimer()
-        const sortedList = this.algorithm.call(undefined, this.list)
+        const sortedList = this.algorithm.call(undefined, this.list, mem, ops)
         this.stopTimer()
 
-        const ops = 2345
         const time = this.getNS()
+
+        if (!this.humanReadable) {
+            return { time, ops: ops[0] }
+        }
 
         const result = (
             `
 Time: ${this.getNS()} ns (${this.getMS()} ms)
 Is sorted: ${this.isSorted(sortedList) ? "yes" : "no"}
 Is destructive: ${this.isDestructive(sortedList) ? "yes" : "no"}
-O(): ${ops} (expected ${this.expectedOps} ops)
+O(): ${ops[0]} (expected ${this.expectedOps} ops)
 `
         )
         console.log(result);
 
-        return { time, ops }
+        return { time, ops: ops[0] }
     }
 }
 
 
-// Meta settings
-const loops = 1
+// Meta Settings
+const loops = 1000
 const listLength = 10000
-const stats: {
-    randomList: {
-        times: number[],
-        ops: number[]
-    },
-    semiSorted: {
-        times: number[],
-        ops: number[]
-    }
-} = { randomList: { times: [], ops: [] }, semiSorted: { times: [], ops: [] } }
 
-const algorithm = quicksort
-const expectedO = Math.round(listLength * Math.log(listLength))
+const algQueue: any = [
+    { algorithm: quicksort, expectedO: Math.round(listLength * Math.log10(listLength)) } // n*log(n)
+]
+const stats: any = [
+    { randomList: { times: [], ops: [] }, semiSorted: { times: [], ops: [] } }
+]
 
-// The testening
+// The Testening
+let lastPercent = 0
 for (let index = 0; index < loops; index++) {
+
+    const percent = Math.floor((index / loops) * 100 + 1)
+    if (percent !== lastPercent) {
+        console.clear()
+
+        const fillAmount = (index / loops) * 20
+        let fill = ""
+        for (let index = 0; index < 20; index++) {
+            if (index < fillAmount) {
+                fill += "="
+            } else {
+                fill += " "
+            }
+        }
+        const bar = `[${fill}]`
+        console.log(percent + " % " + bar);
+    }
+    lastPercent = percent
+
     let result
 
     const sliceIndex = Math.random() * listLength // randomize how big of slices to use for semisorted lists
-    const fullList = tf.abs(tf.randomStandardNormal([listLength])).arraySync() as number[]
+    const fullList = tf.abs(tf.randomNormal([listLength])).arraySync() as number[]
     const sortedEnd = fullList.slice(0, sliceIndex + 1).sort()
     const remainder = fullList.slice(sliceIndex, -1)
     const semiSortedList = sortedEnd.concat(remainder)
 
-    const fullQuicksort = new Tester(algorithm, fullList, expectedO)
+    const fullQuicksort = new Tester(algQueue[0].algorithm, fullList, algQueue[0].expectedO, false)
     result = fullQuicksort.start()
-    stats.randomList.times.push(result.time)
-    stats.randomList.ops.push(result.ops)
+    stats[0].randomList.times.push(result.time)
+    stats[0].randomList.ops.push(result.ops)
 
-    const semiSortedQuicksort = new Tester(algorithm, semiSortedList, expectedO)
+    const semiSortedQuicksort = new Tester(algQueue[0].algorithm, semiSortedList, algQueue[0].expectedO, false)
     result = semiSortedQuicksort.start()
-    stats.semiSorted.times.push(result.time)
-    stats.semiSorted.ops.push(result.ops)
+    stats[0].semiSorted.times.push(result.time)
+    stats[0].semiSorted.ops.push(result.ops)
 }
 
 // Results
 const randomListStats = {
-    time: tf.sum(stats.randomList.times).dataSync()[0] / stats.randomList.times.length,
-    ops: tf.sum(stats.randomList.ops).dataSync()[0] / stats.randomList.ops.length
+    time: tf.sum(stats[0].randomList.times).dataSync()[0] / stats[0].randomList.times.length,
+    ops: tf.sum(stats[0].randomList.ops).dataSync()[0] / stats[0].randomList.ops.length
 }
 const semiSortedListStats = {
-    time: tf.sum(stats.semiSorted.times).dataSync()[0] / stats.semiSorted.times.length,
-    ops: tf.sum(stats.semiSorted.ops).dataSync()[0] / stats.semiSorted.ops.length
+    time: tf.sum(stats[0].semiSorted.times).dataSync()[0] / stats[0].semiSorted.times.length,
+    ops: tf.sum(stats[0].semiSorted.ops).dataSync()[0] / stats[0].semiSorted.ops.length
 }
 const result = (
     `
 Fully random list results on average:
     ${randomListStats.time} ns
     ${(randomListStats.time * 10 ** -6).toFixed(2)} ms
-    ${randomListStats.ops.toFixed(0)} operations (expected ${expectedO})
+    ${randomListStats.ops.toFixed(0)} operations (expected ${algQueue[0].expectedO})
 
 Semi sorted list results on average:
     ${semiSortedListStats.time} ns
     ${(semiSortedListStats.time * 10 ** -6).toFixed(2)} ms
-    ${semiSortedListStats.ops.toFixed(0)} operations (expected ${expectedO})
+    ${semiSortedListStats.ops.toFixed(0)} operations (expected ${algQueue[0].expectedO})
     `
 )
 console.log(result);

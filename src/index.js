@@ -1,137 +1,101 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var tf = require("@tensorflow/tfjs");
-var algorithm_1 = require("./algorithm");
-var Tester = /** @class */ (function () {
-    function Tester(algorithm, list, expectedOps, humanReadable) {
-        if (humanReadable === void 0) { humanReadable = false; }
-        this.startTime = 0;
-        this.stopTime = 0;
-        this.time = 0;
-        this.list = list;
-        this.initialLength = list.length;
-        this.inventory = this.takeInventory(this.list);
-        this.algorithm = algorithm;
-        this.expectedOps = expectedOps;
-        this.opsCount = 0;
-        this.humanReadable = humanReadable;
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
     }
-    Tester.prototype.takeInventory = function (list) {
-        var inventory = {};
-        for (var index = 0; index < this.initialLength; index++) {
-            var selector = list[index].toString();
-            if (inventory[selector] === undefined) {
-                inventory[selector] = 1;
-            }
-            else {
-                inventory[selector]++;
-            }
-        }
-        return inventory;
-    };
-    Tester.prototype.startTimer = function () {
-        this.startTime = parseInt(process.hrtime.bigint().toString().replace("n", ""));
-    };
-    Tester.prototype.stopTimer = function () {
-        this.stopTime = parseInt(process.hrtime.bigint().toString().replace("n", ""));
-    };
-    Tester.prototype.getMS = function () {
-        return Math.floor((this.stopTime - this.startTime) * Math.pow(10, -6));
-    };
-    Tester.prototype.getNS = function () {
-        return this.stopTime - this.startTime;
-    };
-    Tester.prototype.isSorted = function (sortedList) {
-        var length = sortedList.length;
-        for (var index = 0; index < length; index++) {
-            if (sortedList[index] > sortedList[index + 1]) {
-                return false;
-            }
-        }
-        return true;
-    };
-    Tester.prototype.isDestructive = function (sortedList) {
-        var _this = this;
-        if (this.initialLength !== sortedList.length) {
-            return true;
-        }
-        var isDestructive = false;
-        var sortedInventory = this.takeInventory(sortedList);
-        Object.keys(sortedInventory).forEach(function (element) {
-            isDestructive = !(!isDestructive && sortedInventory[element] === _this.inventory[element]);
-        });
-        return isDestructive;
-    };
-    Tester.prototype.start = function () {
-        var mem = [];
-        var ops = [0];
-        this.startTimer();
-        var sortedList = this.algorithm.call(undefined, this.list, mem, ops);
-        this.stopTimer();
-        var time = this.getNS();
-        if (!this.humanReadable) {
-            return { time: time, ops: ops[0] };
-        }
-        var result = ("\nTime: ".concat(this.getNS(), " ns (").concat(this.getMS(), " ms)\nIs sorted: ").concat(this.isSorted(sortedList) ? "yes" : "no", "\nIs destructive: ").concat(this.isDestructive(sortedList) ? "yes" : "no", "\nO(): ").concat(ops[0], " (expected ").concat(this.expectedOps, " ops)\n"));
-        console.log(result);
-        return { time: time, ops: ops[0] };
-    };
-    return Tester;
-}());
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const tf = __importStar(require("@tensorflow/tfjs"));
+const algorithm_1 = require("./algorithm");
+const tester_1 = require("./tester");
 // Meta Settings
-var loops = 1000;
-var listLength = 10000;
-var algQueue = [
-    { algorithm: algorithm_1.quicksort, expectedO: Math.round(listLength * Math.log10(listLength)) } // n*log(n)
+const loops = 10;
+const listLength = 10000;
+const algQueue = [
+    { name: "Quicksort", algorithm: algorithm_1.quicksort, expectedO: Math.round(listLength * Math.log10(listLength)) },
+    { name: "Mergesort", algorithm: algorithm_1.mergesort, expectedO: Math.round(listLength * Math.log10(listLength)) }, // n*log(n)
 ];
-var stats = [
-    { randomList: { times: [], ops: [] }, semiSorted: { times: [], ops: [] } }
+const stats = [
+    { randomList: { times: [], ops: [] }, semiSorted: { times: [], ops: [] } },
+    { randomList: { times: [], ops: [] }, semiSorted: { times: [], ops: [] } },
 ];
+const algIndex = 0;
 // The Testening
-var lastPercent = 0;
-for (var index = 0; index < loops; index++) {
-    var percent = Math.floor((index / loops) * 100 + 1);
+let lastPercent = 0;
+for (let index = 0; index < loops; index++) {
+    const percent = Math.floor((index / loops) * 100 + 1);
     if (percent !== lastPercent) {
         console.clear();
-        var fillAmount = (index / loops) * 20;
-        var fill = "";
-        for (var index_1 = 0; index_1 < 20; index_1++) {
-            if (index_1 < fillAmount) {
+        const fillAmount = (index / loops) * 20;
+        let fill = "";
+        for (let index = 0; index < 20; index++) {
+            if (index < fillAmount) {
                 fill += "=";
             }
             else {
                 fill += " ";
             }
         }
-        var bar = "[".concat(fill, "]");
+        const bar = `[${fill}]`;
         console.log(percent + " % " + bar);
     }
     lastPercent = percent;
-    var result_1 = void 0;
-    var sliceIndex = Math.random() * listLength; // randomize how big of slices to use for semisorted lists
-    var fullList = tf.abs(tf.randomNormal([listLength])).arraySync();
-    var sortedEnd = fullList.slice(0, sliceIndex + 1).sort();
-    var remainder = fullList.slice(sliceIndex, -1);
-    var semiSortedList = sortedEnd.concat(remainder);
-    var fullQuicksort = new Tester(algQueue[0].algorithm, fullList, algQueue[0].expectedO, false);
-    result_1 = fullQuicksort.start();
-    stats[0].randomList.times.push(result_1.time);
-    stats[0].randomList.ops.push(result_1.ops);
-    var semiSortedQuicksort = new Tester(algQueue[0].algorithm, semiSortedList, algQueue[0].expectedO, false);
-    result_1 = semiSortedQuicksort.start();
-    stats[0].semiSorted.times.push(result_1.time);
-    stats[0].semiSorted.ops.push(result_1.ops);
+    let result;
+    const sliceIndex = Math.random() * listLength; // randomize how big of slices to use for semisorted lists
+    const fullList = tf.abs(tf.randomNormal([listLength])).arraySync();
+    const sortedEnd = fullList.slice(0, sliceIndex + 1).sort();
+    const remainder = fullList.slice(sliceIndex, -1);
+    const semiSortedList = sortedEnd.concat(remainder);
+    const fullQuicksort = new tester_1.Tester(algQueue[algIndex].algorithm, fullList, algQueue[algIndex].expectedO, false);
+    result = fullQuicksort.start();
+    stats[algIndex].randomList.times.push(result.time);
+    stats[algIndex].randomList.ops.push(result.ops);
+    const semiSortedQuicksort = new tester_1.Tester(algQueue[algIndex].algorithm, semiSortedList, algQueue[algIndex].expectedO, false);
+    result = semiSortedQuicksort.start();
+    stats[algIndex].semiSorted.times.push(result.time);
+    stats[algIndex].semiSorted.ops.push(result.ops);
+    // Test more algorithms here
 }
 // Results
-var randomListStats = {
-    time: tf.sum(stats[0].randomList.times).dataSync()[0] / stats[0].randomList.times.length,
-    ops: tf.sum(stats[0].randomList.ops).dataSync()[0] / stats[0].randomList.ops.length
+const randomListStats = {
+    time: tf.sum(stats[algIndex].randomList.times).dataSync()[0] / stats[algIndex].randomList.times.length,
+    ops: tf.sum(stats[algIndex].randomList.ops).dataSync()[0] / stats[algIndex].randomList.ops.length
 };
-var semiSortedListStats = {
-    time: tf.sum(stats[0].semiSorted.times).dataSync()[0] / stats[0].semiSorted.times.length,
-    ops: tf.sum(stats[0].semiSorted.ops).dataSync()[0] / stats[0].semiSorted.ops.length
+const semiSortedListStats = {
+    time: tf.sum(stats[algIndex].semiSorted.times).dataSync()[0] / stats[algIndex].semiSorted.times.length,
+    ops: tf.sum(stats[algIndex].semiSorted.ops).dataSync()[0] / stats[algIndex].semiSorted.ops.length
 };
-var result = ("\nFully random list results on average:\n    ".concat(randomListStats.time, " ns\n    ").concat((randomListStats.time * Math.pow(10, -6)).toFixed(2), " ms\n    ").concat(randomListStats.ops.toFixed(0), " operations (expected ").concat(algQueue[0].expectedO, ")\n\nSemi sorted list results on average:\n    ").concat(semiSortedListStats.time, " ns\n    ").concat((semiSortedListStats.time * Math.pow(10, -6)).toFixed(2), " ms\n    ").concat(semiSortedListStats.ops.toFixed(0), " operations (expected ").concat(algQueue[0].expectedO, ")\n    "));
+const result = (`
+Using: ${algQueue[algIndex].name}
+
+Fully random list results on average:
+    ${randomListStats.time} ns
+    ${(randomListStats.time * 10 ** -6).toFixed(2)} ms
+    ${randomListStats.ops.toFixed(0)} operations (expected ${algQueue[algIndex].expectedO})
+
+Semi sorted list results on average:
+    ${semiSortedListStats.time} ns
+    ${(semiSortedListStats.time * 10 ** -6).toFixed(2)} ms
+    ${semiSortedListStats.ops.toFixed(0)} operations (expected ${algQueue[algIndex].expectedO})
+    `);
 console.log(result);
 // Browser Stuff
 // const max: number = tf.argMax(list).dataSync()[0]

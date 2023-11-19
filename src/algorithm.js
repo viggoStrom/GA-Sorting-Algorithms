@@ -1,30 +1,21 @@
 "use strict";
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
-    }
-    return to.concat(ar || Array.prototype.slice.call(from));
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.quicksort = void 0;
+exports.mergesort = exports.quicksort = void 0;
 // Stolen from https://www.freecodecamp.org/news/how-to-write-quick-sort-algorithm-with-javascript/ 
 // With heavy modification and help from Axel Thornberg
-var quicksort = function (list, mem, ops) {
+const quicksort = (list, mem, ops) => {
     mem.push(process.memoryUsage.rss());
     ops[0]++;
     if (list.length <= 1) {
         return list;
     }
-    var pivot = list[Math.floor(Math.random() * list.length)];
-    var leftArray = [];
-    var rightArray = [];
-    var equalities = [];
-    for (var i = 0; i < list.length; i++) {
+    const pivot = list[Math.floor(Math.random() * list.length)];
+    const leftArray = [];
+    const rightArray = [];
+    const equalities = [];
+    for (let i = 0; i < list.length; i++) {
         ops[0]++;
-        var element = list[i];
+        const element = list[i];
         if (element < pivot) {
             ops[0]++;
             leftArray.push(element);
@@ -38,6 +29,38 @@ var quicksort = function (list, mem, ops) {
             rightArray.push(element);
         }
     }
-    return __spreadArray(__spreadArray(__spreadArray([], (0, exports.quicksort)(leftArray, mem, ops), true), equalities, true), (0, exports.quicksort)(rightArray, mem, ops), true);
+    return [...(0, exports.quicksort)(leftArray, mem, ops), ...equalities, ...(0, exports.quicksort)(rightArray, mem, ops)];
 };
 exports.quicksort = quicksort;
+// Credit to https://www.doabledanny.com/merge-sort-javascript 
+// With modification
+const merge = (left, right, ops) => {
+    const sortedArr = []; // the sorted items will go here
+    ops[0] += 2; // might be problematic if it loosly checks conditions
+    while (left.length > 0 && right.length > 0) {
+        // Insert the smallest item into sortedArr
+        ops[0] += 1;
+        if (left[0] < right[0]) {
+            sortedArr.push(left.shift());
+        }
+        else {
+            sortedArr.push(right.shift());
+        }
+    }
+    // Use spread operators to create a new array, combining the three arrays
+    return [...sortedArr, ...left, ...right];
+};
+const mergesort = (list, mem, ops) => {
+    mem.push(process.memoryUsage.rss());
+    // Base case
+    ops[0] += 1;
+    if (list.length <= 1) {
+        return list;
+    }
+    const middleIndex = Math.floor(list.length / 2);
+    // Recursive calls
+    const left = (0, exports.mergesort)(list.slice(0, middleIndex), mem, ops);
+    const right = (0, exports.mergesort)(list.slice(middleIndex), mem, ops);
+    return merge(left, right, ops);
+};
+exports.mergesort = mergesort;

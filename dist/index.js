@@ -1,89 +1,98 @@
-
-import * as tf from "@tensorflow/tfjs"
-import { mergesort, quicksort } from "./algorithm"
-import { Tester } from "./tester"
-
-
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const tf = __importStar(require("@tensorflow/tfjs"));
+const algorithm_1 = require("./algorithm");
+const tester_1 = require("./tester");
 // Meta Settings
-const algIndex = 0
-const loops = 100
-const listLength = 10_000
-
-const getTime = (): number => {
-    return parseInt(process.hrtime.bigint().toString().replace("n", ""))
-}
-const log = (x: number): number => {
-    return Math.log10(x)
-}
-const algQueue: any = [
-    { name: "Quicksort", algorithm: quicksort, averageOh: listLength * log(listLength), worstOh: listLength ** 2, bestOh: listLength * log(listLength) },
-    { name: "Mergesort", algorithm: mergesort, averageOh: listLength * log(listLength), worstOh: listLength ** 2, bestOh: listLength * log(listLength) },
-]
-const stats: any = [
+const algIndex = 0;
+const loops = 100;
+const listLength = 10000;
+const getTime = () => {
+    return parseInt(process.hrtime.bigint().toString().replace("n", ""));
+};
+const log = (x) => {
+    return Math.log10(x);
+};
+const algQueue = [
+    { name: "Quicksort", algorithm: algorithm_1.quicksort, averageOh: listLength * log(listLength), worstOh: listLength ** 2, bestOh: listLength * log(listLength) },
+    { name: "Mergesort", algorithm: algorithm_1.mergesort, averageOh: listLength * log(listLength), worstOh: listLength ** 2, bestOh: listLength * log(listLength) },
+];
+const stats = [
     { randomList: { times: [], ops: [] }, semiSorted: { times: [], ops: [] } },
     { randomList: { times: [], ops: [] }, semiSorted: { times: [], ops: [] } },
-]
-
-
+];
 // The Testening
-const startTime = getTime()
-
-let lastPercent = 0
+const startTime = getTime();
+let lastPercent = 0;
 for (let index = 0; index < loops; index++) {
-
-    const percent = Math.floor((index / loops) * 100 + 1)
+    const percent = Math.floor((index / loops) * 100 + 1);
     if (percent !== lastPercent) {
-        console.clear()
-
-        const fillAmount = (index / loops) * 20
-        let fill = ""
+        console.clear();
+        const fillAmount = (index / loops) * 20;
+        let fill = "";
         for (let index = 0; index < 20; index++) {
             if (index < fillAmount) {
-                fill += "="
-            } else {
-                fill += " "
+                fill += "=";
+            }
+            else {
+                fill += " ";
             }
         }
-        const bar = `[${fill}]`
+        const bar = `[${fill}]`;
         console.log(percent + " % " + bar);
         console.log(`Runtime: ${((getTime() - startTime) * 10 ** -9).toFixed(1)} s`);
     }
-    lastPercent = percent
-
-    let result
-
-    const sliceIndex = Math.random() * listLength // randomize how big of slices to use for semisorted lists
-    const fullList = tf.abs(tf.randomNormal([listLength])).arraySync() as number[]
-    const sortedEnd = fullList.slice(0, sliceIndex + 1).sort()
-    const remainder = fullList.slice(sliceIndex, -1)
-    const semiSortedList = sortedEnd.concat(remainder)
-
-    const fullQuicksort = new Tester(algQueue[algIndex].algorithm, fullList, algQueue[algIndex].averageOh, false)
-    result = fullQuicksort.start()
-    stats[algIndex].randomList.times.push(result.time)
-    stats[algIndex].randomList.ops.push(result.ops)
-
-    const semiSortedQuicksort = new Tester(algQueue[algIndex].algorithm, semiSortedList, algQueue[algIndex].averageOh, false)
-    result = semiSortedQuicksort.start()
-    stats[algIndex].semiSorted.times.push(result.time)
-    stats[algIndex].semiSorted.ops.push(result.ops)
-
+    lastPercent = percent;
+    let result;
+    const sliceIndex = Math.random() * listLength; // randomize how big of slices to use for semisorted lists
+    const fullList = tf.abs(tf.randomNormal([listLength])).arraySync();
+    const sortedEnd = fullList.slice(0, sliceIndex + 1).sort();
+    const remainder = fullList.slice(sliceIndex, -1);
+    const semiSortedList = sortedEnd.concat(remainder);
+    const fullQuicksort = new tester_1.Tester(algQueue[algIndex].algorithm, fullList, algQueue[algIndex].averageOh, false);
+    result = fullQuicksort.start();
+    stats[algIndex].randomList.times.push(result.time);
+    stats[algIndex].randomList.ops.push(result.ops);
+    const semiSortedQuicksort = new tester_1.Tester(algQueue[algIndex].algorithm, semiSortedList, algQueue[algIndex].averageOh, false);
+    result = semiSortedQuicksort.start();
+    stats[algIndex].semiSorted.times.push(result.time);
+    stats[algIndex].semiSorted.ops.push(result.ops);
     // Test more algorithms here
 }
-
 console.log(`\nAll of it took ${((getTime() - startTime) * 10 ** -9).toFixed(1)} s \n`);
-
 // Results
 const randomListStats = {
     time: tf.sum(stats[algIndex].randomList.times).dataSync()[0] / stats[algIndex].randomList.times.length,
     ops: tf.sum(stats[algIndex].randomList.ops).dataSync()[0] / stats[algIndex].randomList.ops.length
-}
+};
 const semiSortedListStats = {
     time: tf.sum(stats[algIndex].semiSorted.times).dataSync()[0] / stats[algIndex].semiSorted.times.length,
     ops: tf.sum(stats[algIndex].semiSorted.ops).dataSync()[0] / stats[algIndex].semiSorted.ops.length
-}
-const result = (
-    `
+};
+const result = (`
 Using: ${algQueue[algIndex].name}
 
 Fully random list results on average:
@@ -101,66 +110,22 @@ Semi sorted list results on average:
         Expected average ${algQueue[algIndex].averageOh}
         Expected worst ${algQueue[algIndex].worstOh}
         Expected best ${algQueue[algIndex].bestOh}
-    `
-)
-
+    `);
 console.log(result);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // Browser Stuff
-
 // const max: number = tf.argMax(list).dataSync()[0]
 // const min: number = tf.argMin(list).dataSync()[0]
-
 // // const steps: number = 20
 // // const percentList = (list.arraySync() as number[]).map((element) => 5000 * element / max).sort()
 // // const normalDistList: number[] = []
-
 // // for (let index = 0; index < percentList.length; index += listLength / steps) {
 // //     for (let localIndex = 0; localIndex < listLength / steps; localIndex++) {
 // //         normalDistList.push(percentList[index + localIndex])
 // //     }
 // // }
-
 // // console.log(normalDistList);
-
 // // fs.writeFileSync("src/dataVis/dataVisOut.csv", normalDistList.toString())
-
-
-
-
 // BMP stuff
-
 // const binToBase64 = (fullBin: string): string => {
 //     const chunks = []
 //     for (let index = 0; index < fullBin.length; index += 6) {
@@ -310,7 +275,6 @@ console.log(result);
 //     splitBase64.forEach((letter: string) => {
 //         binaryData += (conversionMap as any)[letter]
 //     })
-
 //     return binaryData
 // }
 // // const decToBase64 = (fullDec: string): string => {
@@ -319,8 +283,6 @@ console.log(result);
 // const replaceAt = (string: string, index: number, replacement: string): string => {
 //     return string.substring(0, index) + replacement + string.substring(index + replacement.length);
 // }
-
-
 // class bitmapInterface {
 //     height: number;
 //     width: number;
@@ -340,11 +302,9 @@ console.log(result);
 //         this.data = base64ToBin(fs.readFileSync(this.path, "base64"))
 //         // fs.writeFileSync("./outputs/binOut.txt", this.data)
 //     }
-
 //     write = (): void => {
 //         fs.writeFileSync(this.path, binToBase64(this.data), "base64")
 //     }
-
 //     whiteAt = (x: number, y: number) => {
 //         const index: number = this.headerSize + (x + (this.width + this.rowPadding) * (this.height - y));
 //         this.data = replaceAt(this.data, index, "1")
@@ -352,9 +312,7 @@ console.log(result);
 //         this.write()
 //     }
 // }
-
 // const bmp = new bitmapInterface("./graphs/normalDist.bmp")
-
 // bmp.whiteAt(0, 1)
 // bmp.whiteAt(1000, 1)
 // bmp.whiteAt(0, 500)

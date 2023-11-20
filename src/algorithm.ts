@@ -33,6 +33,7 @@ export const quicksort = (list: number[], mem: number[], ops: number[]): number[
 }
 
 
+
 // Credit to https://www.doabledanny.com/merge-sort-javascript 
 // With modification
 const merge = (left: number[], right: number[], ops: number[]): number[] => {

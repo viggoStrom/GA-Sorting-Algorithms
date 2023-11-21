@@ -66,3 +66,32 @@ export const mergesort = (list: number[], mem: number[], ops: number[]): number[
 
     return merge(left, right, ops)
 }
+
+
+// Source: https://bit.ly/3hEZdCl
+// I renamed and moved some stuff for the sake of clearity
+// Helper function
+const heapify = (list: number[], index: number, length: number) => {
+    const left = 2 * index + 1;
+    const right = 2 * index + 2;
+    let max = index;
+    if (left < length && list[left] > list[max]) max = left;
+    if (right < length && list[right] > list[max]) max = right;
+    if (max !== index) {
+        [list[max], list[index]] = [list[index], list[max]];
+        heapify(list, max, length);
+    }
+};
+export const heapsort = (list: number[]) => {
+    let length = list.length;
+
+    for (let index = Math.floor(length / 2); index >= 0; index -= 1) {
+        heapify(list, index, length)
+    };
+    for (let index = list.length - 1; index > 0; index--) {
+        [list[0], list[index]] = [list[index], list[0]];
+        length--;
+        heapify(list, 0, length);
+    }
+    return list;
+};

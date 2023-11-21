@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.mergesort = exports.quicksort = void 0;
+exports.heapsort = exports.mergesort = exports.quicksort = void 0;
 // Stolen from https://www.freecodecamp.org/news/how-to-write-quick-sort-algorithm-with-javascript/ 
 // With heavy modification and help from Axel Thornberg
 const quicksort = (list, mem, ops) => {
@@ -64,3 +64,33 @@ const mergesort = (list, mem, ops) => {
     return merge(left, right, ops);
 };
 exports.mergesort = mergesort;
+// Source: https://bit.ly/3hEZdCl
+// I renamed and moved some stuff for the sake of clearity
+// Helper function
+const heapify = (list, index, length) => {
+    const left = 2 * index + 1;
+    const right = 2 * index + 2;
+    let max = index;
+    if (left < length && list[left] > list[max])
+        max = left;
+    if (right < length && list[right] > list[max])
+        max = right;
+    if (max !== index) {
+        [list[max], list[index]] = [list[index], list[max]];
+        heapify(list, max, length);
+    }
+};
+const heapsort = (list) => {
+    let length = list.length;
+    for (let index = Math.floor(length / 2); index >= 0; index -= 1) {
+        heapify(list, index, length);
+    }
+    ;
+    for (let index = list.length - 1; index > 0; index--) {
+        [list[0], list[index]] = [list[index], list[0]];
+        length--;
+        heapify(list, 0, length);
+    }
+    return list;
+};
+exports.heapsort = heapsort;

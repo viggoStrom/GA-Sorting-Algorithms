@@ -66,7 +66,7 @@ class Tester {
         this.stopTimer();
         const time = this.getNS();
         if (!this.humanReadable) {
-            return { time, ops: ops[0] };
+            return { time, ops: ops[0], isSorted: this.isSorted(sortedList), isDestructive: this.isDestructive(sortedList) };
         }
         const result = (`
 Time: ${this.getNS()} ns (${this.getMS()} ms)
@@ -75,7 +75,7 @@ Is destructive: ${this.isDestructive(sortedList) ? "yes" : "no"}
 O(): ${ops[0]} (expected ${this.expectedOps} ops)
 `);
         console.log(result);
-        return { time, ops: ops[0] };
+        return { time, ops: ops[0], isSorted: this.isSorted(sortedList), isDestructive: this.isDestructive(sortedList) };
     }
 }
 exports.Tester = Tester;

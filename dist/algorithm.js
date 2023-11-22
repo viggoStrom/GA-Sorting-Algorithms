@@ -1,11 +1,11 @@
 "use strict";
+// n stuff
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.heapsort = exports.mergesort = exports.quicksort = void 0;
+exports.bubblesort = exports.binaryInsertionsort = exports.insertionSort = exports.selectionsort = exports.combsort = exports.heapsort = exports.mergesort = exports.quicksort = void 0;
+// An elementary operation is any one of the arithmetic operations (addition, subtraction, multiplication, division) or a comparison between two numbers or the execution of a branching instruction.
 // Stolen from https://www.freecodecamp.org/news/how-to-write-quick-sort-algorithm-with-javascript/ 
 // With heavy modification and help from Axel Thornberg
-const quicksort = (list, mem, ops) => {
-    mem.push(process.memoryUsage.rss());
-    ops[0]++;
+const quicksort = (list) => {
     if (list.length <= 1) {
         return list;
     }
@@ -14,32 +14,26 @@ const quicksort = (list, mem, ops) => {
     const rightArray = [];
     const equalities = [];
     for (let i = 0; i < list.length; i++) {
-        ops[0]++;
         const element = list[i];
         if (element < pivot) {
-            ops[0]++;
             leftArray.push(element);
         }
         else if (element === pivot) {
-            ops[0] += 2;
             equalities.push(element);
         }
         else {
-            ops[0] += 2;
             rightArray.push(element);
         }
     }
-    return [...(0, exports.quicksort)(leftArray, mem, ops), ...equalities, ...(0, exports.quicksort)(rightArray, mem, ops)];
+    return [...(0, exports.quicksort)(leftArray), ...equalities, ...(0, exports.quicksort)(rightArray)];
 };
 exports.quicksort = quicksort;
 // Credit to https://www.doabledanny.com/merge-sort-javascript 
 // With modification
-const merge = (left, right, ops) => {
+const merge = (left, right) => {
     const sortedArr = []; // the sorted items will go here
-    ops[0] += 2; // might be problematic if it loosly checks conditions
     while (left.length > 0 && right.length > 0) {
         // Insert the smallest item into sortedArr
-        ops[0] += 1;
         if (left[0] < right[0]) {
             sortedArr.push(left.shift());
         }
@@ -50,18 +44,16 @@ const merge = (left, right, ops) => {
     // Use spread operators to create a new array, combining the three arrays
     return [...sortedArr, ...left, ...right];
 };
-const mergesort = (list, mem, ops) => {
-    mem.push(process.memoryUsage.rss());
+const mergesort = (list) => {
     // Base case
-    ops[0] += 1;
     if (list.length <= 1) {
         return list;
     }
     const middleIndex = Math.floor(list.length / 2);
     // Recursive calls
-    const left = (0, exports.mergesort)(list.slice(0, middleIndex), mem, ops);
-    const right = (0, exports.mergesort)(list.slice(middleIndex), mem, ops);
-    return merge(left, right, ops);
+    const left = (0, exports.mergesort)(list.slice(0, middleIndex));
+    const right = (0, exports.mergesort)(list.slice(middleIndex));
+    return merge(left, right);
 };
 exports.mergesort = mergesort;
 // Source: https://bit.ly/3hEZdCl
@@ -94,3 +86,125 @@ const heapsort = (list) => {
     return list;
 };
 exports.heapsort = heapsort;
+// Combsort by https://www.geeksforgeeks.org/comb-sort/ (user: decode2207)
+// Renamed and move stuff yet again
+// Helper function
+const isSorted = (list) => {
+    var isSorted = true;
+    for (var index = 0; index < list.length - 1; index++) {
+        if (list[index] > list[index + 1]) {
+            isSorted = false;
+            break;
+        }
+    }
+    return isSorted;
+};
+const combsort = (list) => {
+    var iteration_count = 0;
+    var gap = list.length - 2;
+    var decrease_factor = 1.25;
+    // Repeat iterations Until array is not sorted
+    while (!isSorted(list)) {
+        // If not first gap  Calculate gap
+        if (iteration_count > 0) {
+            gap = (gap == 1) ? gap : Math.floor(gap / decrease_factor);
+        }
+        // Set front and back elements and increment to a gap
+        var front = 0;
+        var back = gap;
+        while (back <= list.length - 1) {
+            // Swap the elements if they are not ordered
+            if (list[front] > list[back]) {
+                const temp = list[front];
+                list[front] = list[back];
+                list[back] = temp;
+            }
+            // Increment and re-run swapping
+            front += 1;
+            back += 1;
+        }
+        iteration_count += 1;
+    }
+    return list;
+};
+exports.combsort = combsort;
+// Borrowed from https://www.doabledanny.com/selection-sort-javascript
+// With only minor modificaftion
+const selectionsort = (list) => {
+    for (let index = 0; index < list.length; index++) {
+        let lowest = index;
+        for (let subIndex = index + 1; subIndex < list.length; subIndex++) {
+            if (list[subIndex] < list[lowest]) {
+                lowest = subIndex;
+            }
+        }
+        if (lowest !== index) {
+            // Swap
+            [list[index], list[lowest]] = [list[lowest], list[index]];
+        }
+    }
+    return list;
+};
+exports.selectionsort = selectionsort;
+// Borrowed from https://www.doabledanny.com/selection-sort-javascript
+// With only minor modificaftion
+const insertionSort = (list) => {
+    for (let index = 1; index < list.length; index++) {
+        let currentValue = list[index];
+        let subIndex;
+        for (subIndex = index - 1; subIndex >= 0 && list[subIndex] > currentValue; subIndex--) {
+            list[subIndex + 1] = list[subIndex];
+        }
+        list[subIndex + 1] = currentValue;
+    }
+    return list;
+};
+exports.insertionSort = insertionSort;
+// Plagarized from https://www.geeksforgeeks.org/binary-insertion-sort/ (by user: unknown2108)
+// Helper function to binary insertionsort
+const binarySearch = (list, item, low, high) => {
+    if (high <= low)
+        return (item > list[low]) ? (low + 1) : low;
+    const mid = Math.floor((low + high) / 2);
+    if (item == list[mid])
+        return mid + 1;
+    if (item > list[mid])
+        return binarySearch(list, item, mid + 1, high);
+    return binarySearch(list, item, low, mid - 1);
+};
+const binaryInsertionsort = (unsortedList) => {
+    const list = unsortedList;
+    for (let index = 1; index < list.length; index++) {
+        let subIndex = index - 1;
+        let x = list[index];
+        // Find location to insert
+        // using binary search
+        let location = Math.abs(binarySearch(list, x, 0, subIndex));
+        // Shifting array to one
+        // location right
+        while (subIndex >= location) {
+            list[subIndex + 1] = list[subIndex];
+            subIndex--;
+        }
+        // Placing element at its
+        // correct location
+        list[subIndex + 1] = x;
+    }
+    return list;
+};
+exports.binaryInsertionsort = binaryInsertionsort;
+// Reluctantly taken from https://www.geeksforgeeks.org/bubble-sort-algorithms-by-using-javascript/
+// I renamed stuff and removed comments
+const bubblesort = (list) => {
+    for (var index = 0; index < list.length; index++) {
+        for (var subIndex = 0; subIndex < (list.length - index - 1); subIndex++) {
+            if (list[subIndex] > list[subIndex + 1]) {
+                const temp = list[subIndex];
+                list[subIndex] = list[subIndex + 1];
+                list[subIndex + 1] = temp;
+            }
+        }
+    }
+    return list;
+};
+exports.bubblesort = bubblesort;

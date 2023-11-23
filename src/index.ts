@@ -7,13 +7,9 @@ import * as fs from "fs/promises"
 
 
 // Meta Settings
-const algIndex = 3
-const loops = 500
-const listLength = 10
-// quicksort. 11 ms. 21000 ns
-// mergesort. 13 ms. 26000 ns
-// heapsort. 2 ms. 12000 ns
-// combsort. 0.85 ms.7672 ns
+const algIndex = 2
+const loops = 100
+const listLength = 10_000
 
 const getTime = (): number => {
     return parseInt(process.hrtime.bigint().toString().replace("n", ""))
@@ -122,9 +118,6 @@ const runAlg = (algIndex: number, verbose = false): number => {
         const remainder = fullList.slice(sliceIndex, -1)
         const semiSortedList = sortedEnd.concat(remainder)
 
-        fs.writeFile("./outputs/raw.txt", semiSortedList.length + "\n")
-        fs.appendFile("./outputs/raw.txt", semiSortedList.toString())
-
         const fullListTest = new Tester(algQueue[algIndex].algorithm, fullList, algQueue[algIndex].averageOh, verbose)
         result = fullListTest.start()
         stats[algIndex].randomList.times.push(result.time)
@@ -149,6 +142,7 @@ const stopTime = runAlg(algIndex, false)
 console.log(`\nAll of it took ${((getTime() - stopTime) * 10 ** -9).toFixed(1)} s \n`);
 
 const csvHandler = new CSVHandler("./outputs/master.csv")
+csvHandler.write(algQueue[algIndex], stats[algIndex])
 
 // Results
 const randomListStats = {
@@ -163,6 +157,7 @@ const semiSortedListStats = {
     isSorted: stats[algIndex].semiSorted.isSorted,
     isDestructive: stats[algIndex].semiSorted.isDestructive,
 }
+
 const result = (
     `
 Fully random list results on average:

@@ -1,3 +1,4 @@
+import fs from "fs/promises"
 
 export class Tester {
     startTime: number

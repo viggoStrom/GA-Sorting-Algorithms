@@ -56,8 +56,8 @@ const mergesort = (list) => {
     return merge(left, right);
 };
 exports.mergesort = mergesort;
-// Source: https://bit.ly/3hEZdCl
-// I renamed and moved some stuff for the sake of clearity
+// Source: https://github.com/Chalarangelo/30-seconds-of-code/blob/master/content/snippets/js/s/heapsort.md
+// I renamed and moved some stuff for the sake of clarity
 // Helper function
 const heapify = (list, index, length) => {
     const left = 2 * index + 1;

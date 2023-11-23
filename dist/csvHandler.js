@@ -28,22 +28,13 @@ const fs = __importStar(require("fs/promises"));
 class CSVHandler {
     constructor(path) {
         this.path = path;
-        fs.appendFile(this.path, "");
+        fs.appendFile(this.path, "Rand/Sort, NAME, TIMES, TimesLENGTH, times..., OPS, opsLENGTH, ...ops,\n");
     }
-    write(output) {
-        let data = "";
-        if (typeof output === "number") {
-            data = output.toString();
-        }
-        else if (typeof output === "object") {
-            Object.keys(output).forEach((key) => {
-                data += output[key].toString() + ",";
-            });
-        }
-        else {
-            data = output;
-        }
-        fs.appendFile(this.path, data + "\n");
+    write(alg, stats) {
+        let output = "";
+        output += "Rand" + "," + alg.name + "," + "TIMES" + stats.randomList.times.length.toString() + "," + stats.randomList.times.toString() + "," + `OPS-> (${stats.randomList.ops.length})` + "," + stats.randomList.ops.toString() + "," + "\n";
+        output += "Sort" + "," + alg.name + "," + "TIMES" + stats.semiSorted.times.length.toString() + "," + stats.semiSorted.times.toString() + "," + `OPS-> (${stats.semiSorted.ops.length})` + "," + stats.semiSorted.ops.toString() + "," + "\n";
+        fs.appendFile(this.path, output);
     }
 }
 exports.CSVHandler = CSVHandler;

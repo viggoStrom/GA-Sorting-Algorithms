@@ -1,41 +1,13 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const tfjs_1 = require("@tensorflow/tfjs");
 const tester_1 = require("./tester");
 const algorithm_1 = require("./algorithm");
 const csvHandler_1 = require("./csvHandler");
-const fs = __importStar(require("fs/promises"));
 // Meta Settings
-const algIndex = 3;
-const loops = 500;
-const listLength = 10;
-// quicksort. 11 ms. 21000 ns
-// mergesort. 13 ms. 26000 ns
-// heapsort. 2 ms. 12000 ns
-// combsort. 0.85 ms.7672 ns
+const algIndex = 2;
+const loops = 100;
+const listLength = 10000;
 const getTime = () => {
     return parseInt(process.hrtime.bigint().toString().replace("n", ""));
 };
@@ -135,8 +107,6 @@ const runAlg = (algIndex, verbose = false) => {
         const sortedEnd = fullList.slice(0, sliceIndex + 1).sort();
         const remainder = fullList.slice(sliceIndex, -1);
         const semiSortedList = sortedEnd.concat(remainder);
-        fs.writeFile("./outputs/raw.txt", semiSortedList.length + "\n");
-        fs.appendFile("./outputs/raw.txt", semiSortedList.toString());
         const fullListTest = new tester_1.Tester(algQueue[algIndex].algorithm, fullList, algQueue[algIndex].averageOh, verbose);
         result = fullListTest.start();
         stats[algIndex].randomList.times.push(result.time);
@@ -156,6 +126,7 @@ const runAlg = (algIndex, verbose = false) => {
 const stopTime = runAlg(algIndex, false);
 console.log(`\nAll of it took ${((getTime() - stopTime) * 10 ** -9).toFixed(1)} s \n`);
 const csvHandler = new csvHandler_1.CSVHandler("./outputs/master.csv");
+csvHandler.write(algQueue[algIndex], stats[algIndex]);
 // Results
 const randomListStats = {
     time: (0, tfjs_1.sum)(stats[algIndex].randomList.times).dataSync()[0] / stats[algIndex].randomList.times.length,

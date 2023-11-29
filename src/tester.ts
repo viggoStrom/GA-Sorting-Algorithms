@@ -81,7 +81,7 @@ export class Tester {
         const ops: number[] = [0]
 
         this.startTimer()
-        const sortedList = this.algorithm.call(undefined, this.list, mem, ops)
+        const sortedList = this.algorithm.call(undefined, this.list, ops)
         this.stopTimer()
 
         const time = this.getNS()

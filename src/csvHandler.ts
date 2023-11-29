@@ -1,19 +1,42 @@
-import * as fs from "fs/promises"
+import * as fs from "fs"
 
 export class CSVHandler {
     path: string
+    loops: number
+    listLength: number
 
-    constructor(path: string) {
+    constructor(loops: number, listLength: number, path: string) {
         this.path = path
-        fs.appendFile(this.path, "Rand/Sort, NAME, TIMES, TimesLENGTH, times..., OPS, opsLENGTH, ...ops,\n")
+        this.loops = loops
+        this.listLength = listLength
+
+        // fs.appendFileSync(this.path, `\nLoops per alg: ${this.loops}. List length: ${this.listLength}.\n`)
     }
 
     write(alg: any, stats: any) {
-        let output = ""
+        const output = {
+            name: alg.name,
+            metaData: {
+                "loops": this.loops,
+                "listLength": this.listLength,
+                "averageOh": Math.floor(alg.averageOh)
+            },
+            randomList: {
+                "times": [...stats.randomList.times].toString(),
+                "ops": [...stats.randomList.ops].toString(),
+                "isSorted": stats.randomList.isSorted,
+                "isDestructive": stats.randomList.isDestructive,
+                // "mem": [...stats.randomList.mem]
+            },
+            semiSortedList: {
+                "times": [...stats.semiSorted.times].toString(),
+                "ops": [...stats.semiSorted.ops].toString(),
+                "isSorted": stats.semiSorted.isSorted,
+                "isDestructive": stats.semiSorted.isDestructive,
+                // "mem": [...stats.semiSortedList.mem]
+            }
+        }
 
-        output += "Rand" + "," + alg.name + "," + "TIMES" + stats.randomList.times.length.toString() + "," + stats.randomList.times.toString() + "," + `OPS-> (${stats.randomList.ops.length})` + "," + stats.randomList.ops.toString() + "," + "\n"
-        output += "Sort" + "," + alg.name + "," + "TIMES" + stats.semiSorted.times.length.toString() + "," + stats.semiSorted.times.toString() + "," + `OPS-> (${stats.semiSorted.ops.length})` + "," + stats.semiSorted.ops.toString() + "," + "\n"
-
-        fs.appendFile(this.path, output)
+        fs.appendFileSync(this.path, JSON.stringify(output) + "\n", "utf-8")
     }
 }

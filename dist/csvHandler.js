@@ -24,17 +24,38 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CSVHandler = void 0;
-const fs = __importStar(require("fs/promises"));
+const fs = __importStar(require("fs"));
 class CSVHandler {
-    constructor(path) {
+    constructor(loops, listLength, path) {
         this.path = path;
-        fs.appendFile(this.path, "Rand/Sort, NAME, TIMES, TimesLENGTH, times..., OPS, opsLENGTH, ...ops,\n");
+        this.loops = loops;
+        this.listLength = listLength;
+        // fs.appendFileSync(this.path, `\nLoops per alg: ${this.loops}. List length: ${this.listLength}.\n`)
     }
     write(alg, stats) {
-        let output = "";
-        output += "Rand" + "," + alg.name + "," + "TIMES" + stats.randomList.times.length.toString() + "," + stats.randomList.times.toString() + "," + `OPS-> (${stats.randomList.ops.length})` + "," + stats.randomList.ops.toString() + "," + "\n";
-        output += "Sort" + "," + alg.name + "," + "TIMES" + stats.semiSorted.times.length.toString() + "," + stats.semiSorted.times.toString() + "," + `OPS-> (${stats.semiSorted.ops.length})` + "," + stats.semiSorted.ops.toString() + "," + "\n";
-        fs.appendFile(this.path, output);
+        const output = {
+            name: alg.name,
+            metaData: {
+                "loops": this.loops,
+                "listLength": this.listLength,
+                "averageOh": Math.floor(alg.averageOh)
+            },
+            randomList: {
+                "times": [...stats.randomList.times].toString(),
+                "ops": [...stats.randomList.ops].toString(),
+                "isSorted": stats.randomList.isSorted,
+                "isDestructive": stats.randomList.isDestructive,
+                // "mem": [...stats.randomList.mem]
+            },
+            semiSortedList: {
+                "times": [...stats.semiSorted.times].toString(),
+                "ops": [...stats.semiSorted.ops].toString(),
+                "isSorted": stats.semiSorted.isSorted,
+                "isDestructive": stats.semiSorted.isDestructive,
+                // "mem": [...stats.semiSortedList.mem]
+            }
+        };
+        fs.appendFileSync(this.path, JSON.stringify(output) + "\n", "utf-8");
     }
 }
 exports.CSVHandler = CSVHandler;

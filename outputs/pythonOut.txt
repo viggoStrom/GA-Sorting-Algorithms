@@ -1,0 +1,48 @@
+Binary Insertionsort,5,3,507
+Binary Insertionsort,10,10,797
+Binary Insertionsort,50,84,2266
+Binary Insertionsort,100,200,3695
+Binary Insertionsort,500,1349,14134
+Binary Insertionsort,1000,3000,26947
+Bubblesort,5,3,671
+Bubblesort,10,10,1454
+Bubblesort,50,84,7483
+Bubblesort,100,200,14970
+Bubblesort,500,1349,74813
+Bubblesort,1000,3000,150153
+Combsort,5,3,769
+Combsort,10,10,1297
+Combsort,50,84,2657
+Combsort,100,200,3301
+Combsort,500,1349,4952
+Combsort,1000,3000,5758
+Heapsort,5,3,1276
+Heapsort,10,10,1678
+Heapsort,50,84,2614
+Heapsort,100,200,3047
+Heapsort,500,1349,4066
+Heapsort,1000,3000,4511
+Insertionsort,5,3,365
+Insertionsort,10,10,712
+Insertionsort,50,84,3244
+Insertionsort,100,200,6338
+Insertionsort,500,1349,31250
+Insertionsort,1000,3000,62329
+Mergesort,5,3,310
+Mergesort,10,10,436
+Mergesort,50,84,764
+Mergesort,100,200,909
+Mergesort,500,1349,1256
+Mergesort,1000,3000,1406
+Quicksort,5,3,381
+Quicksort,10,10,506
+Quicksort,50,84,857
+Quicksort,100,200,1004
+Quicksort,500,1349,1405
+Quicksort,1000,3000,1565
+Selectionsort,5,3,550
+Selectionsort,10,10,1050
+Selectionsort,50,84,5050
+Selectionsort,100,200,10050
+Selectionsort,500,1349,50050
+Selectionsort,1000,3000,100050

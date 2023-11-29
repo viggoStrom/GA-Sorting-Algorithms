@@ -23,13 +23,15 @@ with open("./outputs/master.txt") as inFile:
         output.append(json.dumps(entry))
         
     with open("./outputs/pythonOut.csv","w") as outFile:
-        outFile.write("name,list length, expected O(), actual O()\n")
+        # outFile.write("name,list length, expected O(), actual O()\n")
         
         for line in output:
             jsonLine = json.loads(line)
 
             n = jsonLine["metaData"]["listLength"]
             opsAvarage = math.floor(stringSum(jsonLine["randomList"]["ops"].split(",")) / jsonLine["metaData"]["loops"])
-            formattedOut = f'{jsonLine["name"]},{n},{jsonLine["metaData"]["averageOh"]},{opsAvarage},{stringSum(jsonLine["randomList"]["times"].split(","))/(jsonLine["metaData"]["loops"] * 1e6)}'
+            timeAvarage = stringSum(jsonLine["randomList"]["times"].split(",")) / (jsonLine["metaData"]["loops"] * 1e6)
+            formattedOut = f'{jsonLine["name"]},{n},{opsAvarage},{timeAvarage}'
+            # formattedOut = f'{jsonLine["name"]},{n},{jsonLine["metaData"]["averageOh"]},{opsAvarage},{stringSum(jsonLine["randomList"]["times"].split(","))/(jsonLine["metaData"]["loops"] * 1e6)}'
 
             outFile.write(formattedOut + "\n")

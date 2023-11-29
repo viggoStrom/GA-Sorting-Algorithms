@@ -9,7 +9,7 @@ export const quicksort = (list: number[], ops: number[]): number[] => {
     }
 
     const pivot = list[Math.floor(Math.random() * list.length)];
-    // ops[0]++
+    ops[0]++
     const leftArray = [];
     const rightArray = [];
     const equalities = [];

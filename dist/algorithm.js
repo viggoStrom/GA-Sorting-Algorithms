@@ -9,7 +9,7 @@ const quicksort = (list, ops) => {
         return list;
     }
     const pivot = list[Math.floor(Math.random() * list.length)];
-    // ops[0]++
+    ops[0]++;
     const leftArray = [];
     const rightArray = [];
     const equalities = [];

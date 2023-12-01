@@ -39,7 +39,7 @@ const log = (x: number): number => {
     return Math.log10(x)
 }
 
-const listLengths = [1_000, 500, 100, 50, 10, 5] // 10_000, 5_000,
+const listLengths = [100_000, 50_000, 10_000, 5_000, 1_000, 500, 100, 50, 10, 5] // 10_000, 5_000,
 const loops = 100
 // const std: any[] = []
 // const stdOf = (list: number[]): number => {

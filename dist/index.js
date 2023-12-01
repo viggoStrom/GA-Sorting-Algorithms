@@ -33,7 +33,7 @@ const getTime = () => {
 const log = (x) => {
     return Math.log10(x);
 };
-const listLengths = [1000, 500, 100, 50, 10, 5]; // 10_000, 5_000,
+const listLengths = [100000, 50000, 10000, 5000, 1000, 500, 100, 50, 10, 5]; // 10_000, 5_000,
 const loops = 100;
 // const std: any[] = []
 // const stdOf = (list: number[]): number => {

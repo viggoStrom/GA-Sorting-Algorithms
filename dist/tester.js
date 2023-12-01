@@ -59,7 +59,7 @@ class Tester {
         return isDestructive;
     }
     start() {
-        const mem = [];
+        // const mem: number[] = []
         const ops = [0];
         this.startTimer();
         const sortedList = this.algorithm.call(undefined, this.list, ops);

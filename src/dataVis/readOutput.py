@@ -31,7 +31,7 @@ with open("./outputs/master.txt") as inFile:
             n = jsonLine["metaData"]["listLength"]
             opsAvarage = math.floor(stringSum(jsonLine["randomList"]["ops"].split(",")) / jsonLine["metaData"]["loops"])
             timeAvarage = stringSum(jsonLine["randomList"]["times"].split(",")) / (jsonLine["metaData"]["loops"] * 1e6)
-            formattedOut = f'{jsonLine["name"]},{n},{opsAvarage},{timeAvarage}'
+            formattedOut = f'{jsonLine["name"]},{n},{opsAvarage}' # ,{timeAvarage}
             # formattedOut = f'{jsonLine["name"]},{n},{jsonLine["metaData"]["averageOh"]},{opsAvarage},{stringSum(jsonLine["randomList"]["times"].split(","))/(jsonLine["metaData"]["loops"] * 1e6)}'
 
             outFile.write(formattedOut + "\n")

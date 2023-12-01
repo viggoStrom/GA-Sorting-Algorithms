@@ -77,7 +77,7 @@ export class Tester {
     }
 
     start(): { time: number, ops: number, isSorted: boolean, isDestructive: boolean } {
-        const mem: number[] = []
+        // const mem: number[] = []
         const ops: number[] = [0]
 
         this.startTimer()

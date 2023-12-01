@@ -44,6 +44,7 @@ const loops = 100;
 //     }
 //     return Math.sqrt((1 / (list.length - 1)) * sum(tempList).dataSync()[0])
 // }
+const startTime = getTime();
 for (let listIndex = 0; listIndex < listLengths.length; listIndex++) {
     const listLength = listLengths[listIndex];
     const n = listLength;
@@ -110,7 +111,6 @@ for (let listIndex = 0; listIndex < listLengths.length; listIndex++) {
         stats.push({ randomList: { times: [], ops: [], isSorted: true, isDestructive: false }, semiSorted: { times: [], ops: [], isSorted: true, isDestructive: false } });
     }
     const runLoop = (algIndex, verbose = false) => {
-        const startTime = getTime();
         let lastPercent = 0;
         for (let index = 0; index < loops; index++) {
             // Percent readout

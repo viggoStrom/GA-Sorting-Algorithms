@@ -51,6 +51,8 @@ const loops = 100
 //     return Math.sqrt((1 / (list.length - 1)) * sum(tempList).dataSync()[0])
 // }
 
+const startTime = getTime()
+
 for (let listIndex = 0; listIndex < listLengths.length; listIndex++) {
     const listLength = listLengths[listIndex]
 
@@ -119,7 +121,6 @@ for (let listIndex = 0; listIndex < listLengths.length; listIndex++) {
     }
 
     const runLoop = (algIndex: number, verbose = false): any => {
-        const startTime = getTime()
 
         let lastPercent = 0
         for (let index = 0; index < loops; index++) {

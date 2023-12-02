@@ -5,6 +5,7 @@ const tester_1 = require("./tester");
 const algorithm_1 = require("./algorithm");
 const csvHandler_1 = require("./csvHandler");
 // import { isMainThread, Worker, MessagePort, parentPort } from "node:worker_threads"
+// [100000, 90000, 80000, 70000, 60000, 50000, 40000, 30000, 20000, 10000, 9000, 8000, 7000, 6000, 5000, 4000, 3000, 2000, 1000, 900, 800, 700, 600, 500, 400, 300, 200, 100,90, 80, 70, 60, 50, 40, 30, 20, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
 // if (isMainThread) {
 //     const queue = []
 //     const workers = []
@@ -33,7 +34,7 @@ const getTime = () => {
 const log = (x) => {
     return Math.log10(x);
 };
-const listLengths = [100000, 50000, 10000, 5000, 1000, 500, 100, 50, 10, 5]; // 10_000, 5_000,
+const listLengths = [100000, 90000, 50000, 10000, 5000, 1000, 500, 100, 50, 10, 5]; // 10_000, 5_000,
 const loops = 100;
 // const std: any[] = []
 // const stdOf = (list: number[]): number => {

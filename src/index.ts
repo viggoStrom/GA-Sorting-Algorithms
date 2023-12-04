@@ -1,5 +1,5 @@
 
-import { sum, randomNormal, abs, round } from "@tensorflow/tfjs"
+import { sum, randomNormal, abs } from "@tensorflow/tfjs"
 import { Tester } from "./tester"
 import { binaryInsertionsort, bubblesort, combsort, heapsort, insertionSort, mergesort, quicksort, selectionsort } from "./algorithm"
 import { CSVHandler } from "./csvHandler"

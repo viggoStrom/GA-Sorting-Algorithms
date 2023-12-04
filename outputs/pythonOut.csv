@@ -1,48 +1,80 @@
 Binary Insertionsort,5,50
 Binary Insertionsort,10,161
-Binary Insertionsort,50,2230
-Binary Insertionsort,100,7319
-Binary Insertionsort,500,141694
-Binary Insertionsort,1000,535345
-Bubblesort,5,70
-Bubblesort,10,291
-Bubblesort,50,7448
-Bubblesort,100,29898
-Bubblesort,500,749168
-Bubblesort,1000,2998851
-Combsort,5,74
+Binary Insertionsort,50,2237
+Binary Insertionsort,100,7417
+Binary Insertionsort,500,141743
+Binary Insertionsort,1000,535972
+Binary Insertionsort,5000,12765254
+Binary Insertionsort,10000,50489107
+Binary Insertionsort,50000,1252917790
+Binary Insertionsort,100000,5007445303
+Bubblesort,5,72
+Bubblesort,10,293
+Bubblesort,50,7482
+Bubblesort,100,29883
+Bubblesort,500,748659
+Bubblesort,1000,2998168
+Bubblesort,5000,74994697
+Bubblesort,10000,300123073
+Bubblesort,50000,7499564570
+Bubblesort,100000,29999569346
+Combsort,5,76
 Combsort,10,258
-Combsort,50,2655
-Combsort,100,6586
-Combsort,500,49604
-Combsort,1000,114408
-Heapsort,5,126
-Heapsort,10,332
-Heapsort,50,2621
-Heapsort,100,6102
-Heapsort,500,40637
-Heapsort,1000,90246
-Insertionsort,5,35
-Insertionsort,10,138
-Insertionsort,50,3173
-Insertionsort,100,12695
-Insertionsort,500,314239
-Insertionsort,1000,1249582
+Combsort,50,2650
+Combsort,100,6579
+Combsort,500,49633
+Combsort,1000,114302
+Combsort,5000,784305
+Combsort,10000,1734553
+Combsort,50000,10360687
+Combsort,100000,22213405
+Heapsort,5,127
+Heapsort,10,333
+Heapsort,50,2615
+Heapsort,100,6092
+Heapsort,500,40655
+Heapsort,1000,90238
+Heapsort,5000,556387
+Heapsort,10000,1202879
+Heapsort,50000,7062361
+Heapsort,100000,15024490
+Insertionsort,5,37
+Insertionsort,10,141
+Insertionsort,50,3207
+Insertionsort,100,12828
+Insertionsort,500,313441
+Insertionsort,1000,1252098
+Insertionsort,5000,31277475
+Insertionsort,10000,125034215
+Insertionsort,50000,3125850421
+Insertionsort,100000,12496876923
 Mergesort,5,30
 Mergesort,10,87
-Mergesort,50,767
-Mergesort,100,1824
-Mergesort,500,12562
-Mergesort,1000,28119
+Mergesort,50,765
+Mergesort,100,1822
+Mergesort,500,12559
+Mergesort,1000,28116
+Mergesort,5000,175666
+Mergesort,10000,381354
+Mergesort,50000,2254490
+Mergesort,100000,4809181
 Quicksort,5,37
-Quicksort,10,100
-Quicksort,50,846
-Quicksort,100,2041
-Quicksort,500,14178
-Quicksort,1000,31364
+Quicksort,10,101
+Quicksort,50,844
+Quicksort,100,2014
+Quicksort,500,14114
+Quicksort,1000,31534
+Quicksort,5000,197215
+Quicksort,10000,430897
+Quicksort,50000,2524721
+Quicksort,100000,5353045
 Selectionsort,5,55
 Selectionsort,10,210
 Selectionsort,50,5050
 Selectionsort,100,20100
 Selectionsort,500,500500
 Selectionsort,1000,2001000
+Selectionsort,5000,50005000
+Selectionsort,10000,200010000
+Selectionsort,50000,5000050000
+Selectionsort,100000,20000100000

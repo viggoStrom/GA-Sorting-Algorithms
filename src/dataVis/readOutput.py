@@ -16,23 +16,22 @@ with open("./outputs/master.txt") as file:
     for entry in raw:
         entries.append(json.loads(entry))
 
-    sortedEntries = sorted(entries, key=lambda d: (
-        d["name"], d["metaData"]["listLength"]))
+    sortedEntries = sorted(entries, key=lambda d: (d["name"], d["metaData"]["listLength"]))
 
     output = []
     for entry in sortedEntries:
         output.append(json.dumps(entry))
 
-    with open("./outputs/pythonOut.csv", "w") as outFile:
-        # outFile.write("name,list length, expected O(), actual O()\n")
+    with open("./outputs/semiSortedListRes.csv", "w") as outFile:
+        # with open("./outputs/randomListRes.csv", "w") as outFile:
 
         for line in output:
             jsonLine = json.loads(line)
 
             n = jsonLine["metaData"]["listLength"]
             opsAvarage = math.floor(stringSum(
-                jsonLine["randomList"]["ops"].split(",")) / jsonLine["metaData"]["loops"])
-            timeAvarage = stringSum(jsonLine["randomList"]["times"].split(
+                jsonLine["semiSortedList"]["ops"].split(",")) / jsonLine["metaData"]["loops"])
+            timeAvarage = stringSum(jsonLine["semiSortedList"]["times"].split(
                 ",")) / (jsonLine["metaData"]["loops"] * 1e6)
             # ,{timeAvarage}
             formattedOut = f'{jsonLine["name"]},{n},{opsAvarage}'
@@ -41,37 +40,37 @@ with open("./outputs/master.txt") as file:
             outFile.write(formattedOut + "\n")
 
 
-with open("outputs/pythonOut.csv", "r") as file:
-    rawLines = file.readlines()
+# with open("outputs/pythonOut.csv", "r") as file:
+#     rawLines = file.readlines()
 
-    algData = []
+#     algData = []
 
-    for index, rawRow in enumerate(rawLines):
-        row = rawRow.split(",")
-        algorithm = row[0]
-        size = int(row[1])
-        time = int(row[2])
+#     for index, rawRow in enumerate(rawLines):
+#         row = rawRow.split(",")
+#         algorithm = row[0]
+#         size = int(row[1])
+#         time = int(row[2])
 
-        if algorithm not in algData:
-            algData.append({'name': "", 'sizes': [], 'times': []})
+#         if algorithm not in algData:
+#             algData.append({'name': "", 'sizes': [], 'times': []})
 
-        algData[index]['name'] = row[0]
-        algData[index]['sizes'].append(size)
-        algData[index]['times'].append(time)
+#         algData[index]['name'] = row[0]
+#         algData[index]['sizes'].append(size)
+#         algData[index]['times'].append(time)
 
-    outputRows = [""]*45
-    outputRows[0] = "n"
+#     outputRows = [""]*45
+#     outputRows[0] = "n"
 
-    for alg in algData:
-        outputRows[0] += ", " + algData[alg]["name"]
-        pass
+#     for alg in algData:
+#         outputRows[0] += ", " + algData[alg]["name"]
+#         pass
 
-    for index, row in enumerate(outputRows):
+#     for index, row in enumerate(outputRows):
 
-        print(index, row, algData[index])
-        pass
+#         print(index, row, algData[index])
+#         pass
 
-    print(outputRows)
+#     print(outputRows)
 
 
 # import io

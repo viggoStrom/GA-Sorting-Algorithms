@@ -1,0 +1,352 @@
+Binary Insertionsort,3,18
+Binary Insertionsort,4,31
+Binary Insertionsort,5,47
+Binary Insertionsort,6,66
+Binary Insertionsort,7,86
+Binary Insertionsort,8,108
+Binary Insertionsort,9,130
+Binary Insertionsort,10,154
+Binary Insertionsort,20,470
+Binary Insertionsort,30,914
+Binary Insertionsort,40,1463
+Binary Insertionsort,50,2143
+Binary Insertionsort,60,2878
+Binary Insertionsort,70,3647
+Binary Insertionsort,80,4622
+Binary Insertionsort,90,5671
+Binary Insertionsort,100,6771
+Binary Insertionsort,200,23107
+Binary Insertionsort,300,49448
+Binary Insertionsort,400,83307
+Binary Insertionsort,500,125815
+Binary Insertionsort,600,185840
+Binary Insertionsort,700,244791
+Binary Insertionsort,800,313576
+Binary Insertionsort,900,393743
+Binary Insertionsort,1000,484707
+Binary Insertionsort,2000,1880328
+Binary Insertionsort,3000,4186668
+Binary Insertionsort,4000,7447540
+Binary Insertionsort,5000,11187975
+Binary Insertionsort,6000,16353591
+Binary Insertionsort,7000,22401760
+Binary Insertionsort,8000,28714120
+Binary Insertionsort,9000,35834229
+Binary Insertionsort,10000,45229490
+Binary Insertionsort,20000,181095244
+Binary Insertionsort,30000,392055589
+Binary Insertionsort,40000,711720102
+Binary Insertionsort,50000,1120872579
+Binary Insertionsort,60000,1607507250
+Binary Insertionsort,70000,2233362675
+Binary Insertionsort,80000,2867813740
+Binary Insertionsort,90000,3636813747
+Binary Insertionsort,100000,4547033441
+Bubblesort,3,21
+Bubblesort,4,41
+Bubblesort,5,66
+Bubblesort,6,96
+Bubblesort,7,133
+Bubblesort,8,177
+Bubblesort,9,224
+Bubblesort,10,280
+Bubblesort,20,1132
+Bubblesort,30,2572
+Bubblesort,40,4570
+Bubblesort,50,7148
+Bubblesort,60,10302
+Bubblesort,70,14043
+Bubblesort,80,18537
+Bubblesort,90,23341
+Bubblesort,100,28823
+Bubblesort,200,115655
+Bubblesort,300,259682
+Bubblesort,400,466369
+Bubblesort,500,719257
+Bubblesort,600,1037246
+Bubblesort,700,1417737
+Bubblesort,800,1844259
+Bubblesort,900,2354679
+Bubblesort,1000,2847003
+Bubblesort,2000,11601311
+Bubblesort,3000,25937604
+Bubblesort,4000,46631969
+Bubblesort,5000,71828888
+Bubblesort,6000,105283946
+Bubblesort,7000,142620175
+Bubblesort,8000,185565001
+Bubblesort,9000,234805588
+Bubblesort,10000,290141305
+Bubblesort,20000,1152474915
+Bubblesort,30000,2613472056
+Bubblesort,40000,4585804827
+Bubblesort,50000,7195662855
+Bubblesort,60000,10452596365
+Bubblesort,70000,14247953980
+Bubblesort,80000,18558728058
+Bubblesort,90000,23522807152
+Bubblesort,100000,28784782888
+Combsort,3,21
+Combsort,4,38
+Combsort,5,74
+Combsort,6,112
+Combsort,7,154
+Combsort,8,183
+Combsort,9,241
+Combsort,10,262
+Combsort,20,702
+Combsort,30,1257
+Combsort,40,1978
+Combsort,50,2669
+Combsort,60,3234
+Combsort,70,4034
+Combsort,80,4941
+Combsort,90,5611
+Combsort,100,6630
+Combsort,200,15952
+Combsort,300,26860
+Combsort,400,37721
+Combsort,500,49933
+Combsort,600,62748
+Combsort,700,76260
+Combsort,800,87459
+Combsort,900,103611
+Combsort,1000,114970
+Combsort,2000,262983
+Combsort,3000,426773
+Combsort,4000,605107
+Combsort,5000,785232
+Combsort,6000,943128
+Combsort,7000,1137657
+Combsort,8000,1342938
+Combsort,9000,1508207
+Combsort,10000,1733895
+Combsort,20000,3767253
+Combsort,30000,5937621
+Combsort,40000,8096419
+Combsort,50000,10374512
+Combsort,60000,12941109
+Combsort,70000,14851681
+Combsort,80000,17380442
+Combsort,90000,20162857
+Combsort,100000,22224174
+Heapsort,3,57
+Heapsort,4,96
+Heapsort,5,124
+Heapsort,6,166
+Heapsort,7,192
+Heapsort,8,245
+Heapsort,9,286
+Heapsort,10,335
+Heapsort,20,830
+Heapsort,30,1373
+Heapsort,40,1977
+Heapsort,50,2613
+Heapsort,60,3262
+Heapsort,70,3958
+Heapsort,80,4645
+Heapsort,90,5382
+Heapsort,100,6096
+Heapsort,200,13946
+Heapsort,300,22484
+Heapsort,400,31524
+Heapsort,500,40583
+Heapsort,600,50293
+Heapsort,700,60235
+Heapsort,800,69858
+Heapsort,900,79975
+Heapsort,1000,90080
+Heapsort,2000,198167
+Heapsort,3000,313678
+Heapsort,4000,431427
+Heapsort,5000,555678
+Heapsort,6000,680178
+Heapsort,7000,808591
+Heapsort,8000,936968
+Heapsort,9000,1067994
+Heapsort,10000,1199809
+Heapsort,20000,2580486
+Heapsort,30000,4020383
+Heapsort,40000,5512828
+Heapsort,50000,7047546
+Heapsort,60000,8599878
+Heapsort,70000,10157403
+Heapsort,80000,11755532
+Heapsort,90000,13360000
+Heapsort,100000,14985782
+Insertionsort,3,10
+Insertionsort,4,22
+Insertionsort,5,32
+Insertionsort,6,46
+Insertionsort,7,62
+Insertionsort,8,78
+Insertionsort,9,104
+Insertionsort,10,126
+Insertionsort,20,465
+Insertionsort,30,1058
+Insertionsort,40,1915
+Insertionsort,50,2891
+Insertionsort,60,4101
+Insertionsort,70,5561
+Insertionsort,80,7289
+Insertionsort,90,9181
+Insertionsort,100,11361
+Insertionsort,200,45011
+Insertionsort,300,101283
+Insertionsort,400,180115
+Insertionsort,500,273251
+Insertionsort,600,408847
+Insertionsort,700,547377
+Insertionsort,800,712897
+Insertionsort,900,910315
+Insertionsort,1000,1103223
+Insertionsort,2000,4434362
+Insertionsort,3000,9900306
+Insertionsort,4000,17586281
+Insertionsort,5000,28033887
+Insertionsort,6000,39841069
+Insertionsort,7000,54074494
+Insertionsort,8000,71664363
+Insertionsort,9000,88705661
+Insertionsort,10000,111896826
+Insertionsort,20000,449371148
+Insertionsort,30000,1019582708
+Insertionsort,40000,1784996798
+Insertionsort,50000,2817421080
+Insertionsort,60000,4115941069
+Insertionsort,70000,5385729374
+Insertionsort,80000,7081277379
+Insertionsort,90000,9117712615
+Insertionsort,100000,11244986557
+Mergesort,3,13
+Mergesort,4,20
+Mergesort,5,29
+Mergesort,6,39
+Mergesort,7,50
+Mergesort,8,60
+Mergesort,9,71
+Mergesort,10,83
+Mergesort,20,219
+Mergesort,30,368
+Mergesort,40,538
+Mergesort,50,715
+Mergesort,60,892
+Mergesort,70,1102
+Mergesort,80,1278
+Mergesort,90,1472
+Mergesort,100,1696
+Mergesort,200,3848
+Mergesort,300,6251
+Mergesort,400,8783
+Mergesort,500,11408
+Mergesort,600,14144
+Mergesort,700,16321
+Mergesort,800,19879
+Mergesort,900,22216
+Mergesort,1000,25045
+Mergesort,2000,55460
+Mergesort,3000,88880
+Mergesort,4000,121275
+Mergesort,5000,150934
+Mergesort,6000,187596
+Mergesort,7000,224495
+Mergesort,8000,262400
+Mergesort,9000,294507
+Mergesort,10000,332391
+Mergesort,20000,710793
+Mergesort,30000,1125427
+Mergesort,40000,1505902
+Mergesort,50000,1957947
+Mergesort,60000,2385132
+Mergesort,70000,2708651
+Mergesort,80000,3188477
+Mergesort,90000,3736330
+Mergesort,100000,4063325
+Quicksort,3,16
+Quicksort,4,25
+Quicksort,5,33
+Quicksort,6,45
+Quicksort,7,55
+Quicksort,8,68
+Quicksort,9,81
+Quicksort,10,94
+Quicksort,20,255
+Quicksort,30,436
+Quicksort,40,624
+Quicksort,50,844
+Quicksort,60,1063
+Quicksort,70,1294
+Quicksort,80,1509
+Quicksort,90,1768
+Quicksort,100,2018
+Quicksort,200,4758
+Quicksort,300,7597
+Quicksort,400,10751
+Quicksort,500,13897
+Quicksort,600,17398
+Quicksort,700,20757
+Quicksort,800,24110
+Quicksort,900,27861
+Quicksort,1000,31356
+Quicksort,2000,69096
+Quicksort,3000,110518
+Quicksort,4000,153030
+Quicksort,5000,196221
+Quicksort,6000,241693
+Quicksort,7000,286195
+Quicksort,8000,333018
+Quicksort,9000,379644
+Quicksort,10000,427877
+Quicksort,20000,923271
+Quicksort,30000,1445484
+Quicksort,40000,1971831
+Quicksort,50000,2508754
+Quicksort,60000,3070891
+Quicksort,70000,3649430
+Quicksort,80000,4192165
+Quicksort,90000,4753326
+Quicksort,100000,5369192
+Selectionsort,3,21
+Selectionsort,4,36
+Selectionsort,5,55
+Selectionsort,6,78
+Selectionsort,7,105
+Selectionsort,8,136
+Selectionsort,9,171
+Selectionsort,10,210
+Selectionsort,20,820
+Selectionsort,30,1830
+Selectionsort,40,3240
+Selectionsort,50,5050
+Selectionsort,60,7260
+Selectionsort,70,9870
+Selectionsort,80,12880
+Selectionsort,90,16290
+Selectionsort,100,20100
+Selectionsort,200,80200
+Selectionsort,300,180300
+Selectionsort,400,320400
+Selectionsort,500,500500
+Selectionsort,600,720600
+Selectionsort,700,980700
+Selectionsort,800,1280800
+Selectionsort,900,1620900
+Selectionsort,1000,2001000
+Selectionsort,2000,8002000
+Selectionsort,3000,18003000
+Selectionsort,4000,32004000
+Selectionsort,5000,50005000
+Selectionsort,6000,72006000
+Selectionsort,7000,98007000
+Selectionsort,8000,128008000
+Selectionsort,9000,162009000
+Selectionsort,10000,200010000
+Selectionsort,20000,800020000
+Selectionsort,30000,1800030000
+Selectionsort,40000,3200040000
+Selectionsort,50000,5000050000
+Selectionsort,60000,7200060000
+Selectionsort,70000,9800070000
+Selectionsort,80000,12800080000
+Selectionsort,90000,16200090000
+Selectionsort,100000,20000100000

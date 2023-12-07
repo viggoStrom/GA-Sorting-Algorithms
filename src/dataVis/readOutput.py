@@ -1,68 +1,104 @@
 
-# import json
-# import math
+import json
+import math
 
 
-# def stringSum(interable):
-#     sumOut = 0
-#     for string in interable:
-#         sumOut += int(string)
-#     return sumOut
+def stringSum(interable):
+    sumOut = 0
+    for string in interable:
+        sumOut += int(string)
+    return sumOut
 
 
-# with open("./outputs/master.txt") as inFile:
-#     raw = inFile.readlines()
-#     entries = []
-#     for entry in raw:
-#         entries.append(json.loads(entry))
+with open("./outputs/master.txt") as file:
+    raw = file.readlines()
+    entries = []
+    for entry in raw:
+        entries.append(json.loads(entry))
 
-#     sortedEntries = sorted(entries, key=lambda d: (d["name"], d["metaData"]["listLength"]))
+    sortedEntries = sorted(entries, key=lambda d: (
+        d["name"], d["metaData"]["listLength"]))
 
-#     output = []
-#     for entry in sortedEntries:
-#         output.append(json.dumps(entry))
+    output = []
+    for entry in sortedEntries:
+        output.append(json.dumps(entry))
 
-#     with open("./outputs/pythonOut.csv","w") as outFile:
-#         # outFile.write("name,list length, expected O(), actual O()\n")
+    with open("./outputs/pythonOut.csv", "w") as outFile:
+        # outFile.write("name,list length, expected O(), actual O()\n")
 
-#         for line in output:
-#             jsonLine = json.loads(line)
+        for line in output:
+            jsonLine = json.loads(line)
 
-#             n = jsonLine["metaData"]["listLength"]
-#             opsAvarage = math.floor(stringSum(jsonLine["randomList"]["ops"].split(",")) / jsonLine["metaData"]["loops"])
-#             timeAvarage = stringSum(jsonLine["randomList"]["times"].split(",")) / (jsonLine["metaData"]["loops"] * 1e6)
-#             formattedOut = f'{jsonLine["name"]},{n},{opsAvarage}' # ,{timeAvarage}
-#             # formattedOut = f'{jsonLine["name"]},{n},{jsonLine["metaData"]["averageOh"]},{opsAvarage},{stringSum(jsonLine["randomList"]["times"].split(","))/(jsonLine["metaData"]["loops"] * 1e6)}'
+            n = jsonLine["metaData"]["listLength"]
+            opsAvarage = math.floor(stringSum(
+                jsonLine["randomList"]["ops"].split(",")) / jsonLine["metaData"]["loops"])
+            timeAvarage = stringSum(jsonLine["randomList"]["times"].split(
+                ",")) / (jsonLine["metaData"]["loops"] * 1e6)
+            # ,{timeAvarage}
+            formattedOut = f'{jsonLine["name"]},{n},{opsAvarage}'
+            # formattedOut = f'{jsonLine["name"]},{n},{jsonLine["metaData"]["averageOh"]},{opsAvarage},{stringSum(jsonLine["randomList"]["times"].split(","))/(jsonLine["metaData"]["loops"] * 1e6)}'
 
-#             outFile.write(formattedOut + "\n")
+            outFile.write(formattedOut + "\n")
 
 
-import io
-import csv
+with open("outputs/pythonOut.csv", "r") as file:
+    rawLines = file.readlines()
 
-# Assuming your data is stored in a string variable named 'data'
-data = open("outputs/pythonOut.csv", "r").read()
+    algData = []
 
-# Create a CSV reader for the data
-csv_reader = csv.reader(io.StringIO(data))
+    for index, rawRow in enumerate(rawLines):
+        row = rawRow.split(",")
+        algorithm = row[0]
+        size = int(row[1])
+        time = int(row[2])
 
-# Dictionary to store data for each algorithm
-data_dict = {}
+        if algorithm not in algData:
+            algData.append({'name': "", 'sizes': [], 'times': []})
 
-# Iterate through the CSV reader and organize the data
-for row in csv_reader:
-    algorithm = row[0]
-    size = int(row[1])
-    time = int(row[2])
+        algData[index]['name'] = row[0]
+        algData[index]['sizes'].append(size)
+        algData[index]['times'].append(time)
 
-    if algorithm not in data_dict:
-        data_dict[algorithm] = {'sizes': [], 'times': []}
+    outputRows = [""]*45
+    outputRows[0] = "n"
 
-    data_dict[algorithm]['sizes'].append(size)
-    data_dict[algorithm]['times'].append(time)
+    for alg in algData:
+        outputRows[0] += ", " + algData[alg]["name"]
+        pass
 
-print(data_dict)
+    for index, row in enumerate(outputRows):
 
-with open("outputs/toExcel.csv", "w") as outputFile:
+        print(index, row, algData[index])
+        pass
 
-    pass
+    print(outputRows)
+
+
+# import io
+# import csv
+
+# data = open("outputs/pythonOut.csv", "r").read()
+
+# csv_reader = csv.reader(io.StringIO(data))
+
+# data_dict = {}
+
+# for row in csv_reader:
+#     algorithm = row[0]
+#     size = int(row[1])
+#     time = int(row[2])
+
+#     if algorithm not in data_dict:
+#         data_dict[algorithm] = {'name': [], 'sizes': [], 'times': []}
+
+#     data_dict[algorithm]['name'] = row[0]
+#     data_dict[algorithm]['sizes'].append(size)
+#     data_dict[algorithm]['times'].append(time)
+
+
+# with open("outputs/toExcel.csv", "w") as file:
+#     output = ""
+#     for alg in data_dict:
+
+#         pass
+#     pass

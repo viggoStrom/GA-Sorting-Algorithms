@@ -2,7 +2,7 @@
 import { sum, randomNormal, abs } from "@tensorflow/tfjs"
 import { Tester } from "./tester"
 import { binaryInsertionsort, bubblesort, combsort, heapsort, insertionSort, mergesort, quicksort, selectionsort } from "./algorithm"
-import { CSVHandler } from "./csvHandler"
+import { CSVHandler } from "./JSONifier"
 // import { isMainThread, Worker, MessagePort, parentPort } from "node:worker_threads"
 
 

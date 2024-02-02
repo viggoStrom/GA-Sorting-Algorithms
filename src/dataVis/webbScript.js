@@ -17,3 +17,5 @@ fetch("dataVisOut.csv")
             graph.appendChild(div)
         })
     })
+
+document.q

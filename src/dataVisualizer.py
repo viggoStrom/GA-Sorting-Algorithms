@@ -1,9 +1,10 @@
 
+import matplotlib.pyplot as plt
 import json
 import math
 
 
-def rawToCSV(input="./outputs/master.txt", output="./outputs/semiSortedListRes.csv"):
+def rawToCSV(input="./data/raw.json", semiSortedOutput="./data/semiSortedLists/avgOps.csv", fullyRandomOutput="./data/fullyRandomLists/avgOps.csv"):
     def stringSum(interable):
         sumOut = 0
         for string in interable:
@@ -23,8 +24,7 @@ def rawToCSV(input="./outputs/master.txt", output="./outputs/semiSortedListRes.c
         for entry in sortedEntries:
             output.append(json.dumps(entry))
 
-        with open(output, "w") as outFile:  # type: ignore
-            # with open("./outputs/randomListRes.csv", "w") as outFile:
+        with open(semiSortedOutput, "w") as outFile:  # type: ignore
 
             for line in output:
                 jsonLine = json.loads(line)
@@ -36,19 +36,29 @@ def rawToCSV(input="./outputs/master.txt", output="./outputs/semiSortedListRes.c
                     /
                     jsonLine["metaData"]["loops"]
                 )
-                timeAvarage = (
-                    stringSum(
-                        jsonLine["semiSortedList"]["times"].split(","))
-                    /
-                    (jsonLine["metaData"]["loops"] * 1e6)
-                )
                 formattedOut = f'{jsonLine["name"]},{n},{opsAvarage}'
-                # formattedOut = f'{jsonLine["name"]},{n},{jsonLine["metaData"]["averageOh"]},{opsAvarage},{stringSum(jsonLine["randomList"]["times"].split(","))/(jsonLine["metaData"]["loops"] * 1e6)}'
+
+                outFile.write(formattedOut + "\n")
+
+        with open(fullyRandomOutput, "w") as outFile:  # type: ignore
+
+            for line in output:
+                jsonLine = json.loads(line)
+
+                n = jsonLine["metaData"]["listLength"]
+                opsAvarage = math.floor(
+                    stringSum(
+                        jsonLine["randomList"]["ops"].split(","))
+                    /
+                    jsonLine["metaData"]["loops"]
+                )
+
+                formattedOut = f'{jsonLine["name"]},{n},{opsAvarage}'
 
                 outFile.write(formattedOut + "\n")
 
 
-def transpose(input="./outputs/semiSortedListRes.csv", output="./outputs/transposeMainOutput.csv"):
+def transpose(input="./data/semiSortedLists/avgOps.csv", output="./data/semiSortedLists/transposedAvgOps.csv"):
     table = [
         ["List Length"],  # list length
         [""],  # V columns V
@@ -74,11 +84,11 @@ def transpose(input="./outputs/semiSortedListRes.csv", output="./outputs/transpo
             table[column][0] = data[0]  # sets column name i.e. the alg name
             table[column].append(data[2])  # sets column name i.e. the alg name
 
-    n2 = ["n^2"]
-    nlogn = ["n*log(n)"]
+    n2 = ["n²"]
+    nlogn = ["nlog(n)"]
     for number in table[0][1:len(table[0])]:
-        n2.append(str(int(number)**2))
-        nlogn.append(str(int(number) * math.log10(int(number))))
+        n2.append(str(int(int(number)**2)))
+        nlogn.append(str(int(int(number) * math.log10(int(number)))))
 
     table.append(n2)
     table.append(nlogn)
@@ -94,3 +104,40 @@ def transpose(input="./outputs/semiSortedListRes.csv", output="./outputs/transpo
             outputFile.write(", ".join(row) + "\n")
 
 
+rawToCSV()
+transpose("./data/semiSortedLists/avgOps.csv",
+          "./data/semiSortedLists/transposedAvgOps.csv")
+transpose("./data/fullyRandomLists/avgOps.csv",
+          "./data/fullyRandomLists/transposedAvgOps.csv")
+
+
+# with open("./data/fullyRandomLists/avgOps.csv", "r") as file:
+
+#     x = [0, 100_000]
+#     y = [0, 3e10]
+
+#     points = []
+#     for index, line in enumerate(file.readlines()):
+#         if index < 44:
+#             fullLine = line.split(",")
+#             listLength = int(fullLine[1])
+#             opsCount = float(fullLine[2])
+#             plt.scatter(listLength, opsCount, color='blue')
+
+#     # # Connect nodes with lines
+#     # for i in range(len(x) - 1):
+#     #     plt.plot([x[i], x[i+1]], [y[i], y[i+1]], color='black', linestyle='-')
+
+#     plt.plot(x, [0, 0], color="black")
+#     plt.plot([0, 0], y, color="black")
+
+#     # Customize the plot
+#     plt.title('Scatter Chart with Connecting Lines')
+#     plt.xlabel('X-axis')
+#     plt.ylabel('Y-axis')
+#     plt.legend()
+
+#     # Show the plot
+#     plt.xlim(x)
+#     plt.ylim(y)
+#     plt.show()

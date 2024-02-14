@@ -3,38 +3,6 @@ import { sum, randomNormal, abs } from "@tensorflow/tfjs"
 import { Tester } from "./tester"
 import { binaryInsertionsort, bubblesort, combsort, heapsort, insertionSort, mergesort, quicksort, selectionsort } from "./algorithm"
 import { CSVHandler } from "./JSONifier"
-// import { isMainThread, Worker, MessagePort, parentPort } from "node:worker_threads"
-
-
-// [100000, 90000, 80000, 70000, 60000, 50000, 40000, 30000, 20000, 10000, 9000, 8000, 7000, 6000, 5000, 4000, 3000, 2000, 1000, 900, 800, 700, 600, 500, 400, 300, 200, 100,90, 80, 70, 60, 50, 40, 30, 20, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
-
-
-// if (isMainThread) {
-//     const queue = []
-
-//     const workers = []
-//     for (let index = 0; index < 4; index++) {
-//         workers.push(new Worker(__filename))
-//     }
-
-//     workers.forEach(worker => {
-//         worker.on("message", (result) => {
-//             console.log("here are the results:", result);
-//         })
-//     })
-
-
-//     workers.forEach(worker => {
-//         worker.postMessage("sort this: _")
-//     })
-// } else {
-//     // Worker end
-//     parentPort?.on("message", (order) => {
-//         console.log(order, "recieved from parent");
-//         const result = (randomNormal([1000]).arraySync() as number[]).sort().toString()
-//         parentPort?.postMessage(result)
-//     })
-// }
 
 const getTime = (): number => {
     return parseInt(process.hrtime.bigint().toString().replace("n", ""))
@@ -44,17 +12,7 @@ const log = (x: number): number => {
 }
 
 const listLengths = [100000, 90000, 80000, 70000, 60000, 50000, 40000, 30000, 20000, 10000, 9000, 8000, 7000, 6000, 5000, 4000, 3000, 2000, 1000, 900, 800, 700, 600, 500, 400, 300, 200, 100,90, 80, 70, 60, 50, 40, 30, 20, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
-// const listLengths = [100_000, 90_000, 50_000, 10_000, 5_000, 1_000, 500, 100, 50, 10, 5] // 10_000, 5_000,
 const loops = 100
-// const std: any[] = []
-// const stdOf = (list: number[]): number => {
-//     const mean = sum(list).dataSync()[0] / list.length
-//     const tempList = []
-//     for (let index = 0; index < list.length; index++) {
-//         tempList.push((list[index] - mean) ** 2)
-//     }
-//     return Math.sqrt((1 / (list.length - 1)) * sum(tempList).dataSync()[0])
-// }
 
 const startTime = getTime()
 
@@ -185,54 +143,4 @@ for (let listIndex = 0; listIndex < listLengths.length; listIndex++) {
     }
 }
 
-// console.log(std);
 process.exit()
-
-// const algIndex = 0
-
-// // Results
-// const randomListStats = {
-//     time: sum(stats[algIndex].randomList.times).dataSync()[0] / stats[algIndex].randomList.times.length,
-//     ops: sum(stats[algIndex].randomList.ops).dataSync()[0] / stats[algIndex].randomList.ops.length,
-//     isSorted: stats[algIndex].randomList.isSorted,
-//     isDestructive: stats[algIndex].randomList.isDestructive,
-// }
-// const semiSortedListStats = {
-//     time: sum(stats[algIndex].semiSorted.times).dataSync()[0] / stats[algIndex].semiSorted.times.length,
-//     ops: sum(stats[algIndex].semiSorted.ops).dataSync()[0] / stats[algIndex].semiSorted.ops.length,
-//     isSorted: stats[algIndex].semiSorted.isSorted,
-//     isDestructive: stats[algIndex].semiSorted.isDestructive,
-// }
-
-// const result = (
-//     `
-// Fully random list results on average:
-//     Checks:
-//         Is sorted: ${randomListStats.isSorted}
-//         Is destructive: ${randomListStats.isDestructive}
-//     Time:
-//         ${(randomListStats.time * 10 ** -6).toFixed(0)} ms
-//         ${randomListStats.time} ns
-//     Operations:
-//         Got: ${randomListStats.ops.toFixed(0)}
-//         Expected average ${algQueue[algIndex].averageOh}
-//         Expected worst ${algQueue[algIndex].worstOh}
-//         Expected best ${algQueue[algIndex].bestOh}
-
-
-// Semi sorted list results on average:
-//     Checks:
-//         Is sorted: ${semiSortedListStats.isSorted}
-//         Is destructive: ${semiSortedListStats.isDestructive}
-//     Time:
-//         ${(semiSortedListStats.time * 10 ** -6).toFixed(0)} ms
-//         ${semiSortedListStats.time} ns
-//     Operations:
-//         Got: ${semiSortedListStats.ops.toFixed(0)}
-//         Expected average ${algQueue[algIndex].averageOh}
-//         Expected worst ${algQueue[algIndex].worstOh}
-//         Expected best ${algQueue[algIndex].bestOh}
-//     `
-// )
-// console.log(`Using: ${algQueue[algIndex].name}`);
-// console.log(result);
